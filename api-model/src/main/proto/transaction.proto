@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package market;
+
+// Typ transakcji
+enum TransactionType {
+  BUY = 0;
+  SELL = 1;
+}
+
+// Żądanie dodania transakcji
+message TransactionRequest {
+  string userId = 1;
+  string symbol = 2;
+  double quantity = 3;
+  double price = 4;
+  TransactionType type = 5;
+  string date = 6; // np. "2025-11-03"
+}
+
+// Odpowiedź serwisu
+message TransactionResponse {
+  string status = 1; // OK / ERROR
+}
+
+// Serwis do dodawania transakcji
+service TransactionService {
+  rpc AddTransaction(TransactionRequest) returns (TransactionResponse);
+}

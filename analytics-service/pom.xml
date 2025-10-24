@@ -62,6 +62,12 @@
             <artifactId>micronaut-serde-jackson</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- Logowanie -->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>

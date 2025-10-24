@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.example.market.grpc";
+option java_outer_classname = "PortfolioProto";
+
+package market;
+
+// ====== REQUESTS ======
+
+message PortfolioRequest {
+  string userId = 1; // Identyfikator użytkownika
+}
+
+// ====== MODELE ======
+
+// Pojedynczy składnik portfela
+message PortfolioItem {
+  string symbol = 1;          // np. "AAPL"
+  string name = 2;            // np. "Apple Inc."
+  double quantity = 3;        // liczba jednostek / akcji
+  double purchasePrice = 4;   // cena zakupu za jednostkę
+  double currentPrice = 5;     // aktualna cena rynkowa
+  string currency = 6;        // np. "USD"
+  string purchaseDate = 7;    // ISO-8601 np. "2023-01-15"
+  double totalValue = 8;      // obliczona wartość (quantity * currentPrice)
+  double profit = 9;     // zysk/strata (totalValue - purchasePrice * quantity)
+}
+
+// ====== RESPONSES ======
+
+message PortfolioResponse {
+  string userId = 1;
+  double totalInvestedValue = 2;              // suma kosztów zakupu
+  double totalCurrentValue = 3;          // suma aktualnych wartości
+  double totalProfitValue = 4;            // zysk/strata całkowity
+  repeated PortfolioItem items = 5;      // lista składników portfela
+  string lastUpdated = 6;                // data aktualizacji portfela
+}
+
+// ====== SERVICE ======
+
+service PortfolioService {
+  rpc GetPortfolio(PortfolioRequest) returns (PortfolioResponse);
+}

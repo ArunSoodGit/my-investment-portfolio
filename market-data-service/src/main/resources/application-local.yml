@@ -1,0 +1,13 @@
+micronaut:
+  application:
+    name: market-data-service
+  server:
+    port: 8081
+
+grpc:
+  server:
+    port: 50052
+
+twelvedata:
+  base-url: https://api.twelvedata.com
+  apikey: ce7d183bf8314c059f7117d2ff75a8a4

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+spec:
+  selector:
+    app: notification-service
+  ports:
+    - protocol: TCP
+      port: 8082      # port w Kubernetes
+      targetPort: 8082 # port w kontenerze
+      nodePort: 30082  # port dostępny z hosta
+  type: NodePort

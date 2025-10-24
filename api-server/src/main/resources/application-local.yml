@@ -1,0 +1,17 @@
+micronaut:
+  application:
+    name: api-server
+  server:
+    port: 8080
+
+grpc:
+  channels:
+    marketdata:
+      address: "localhost:50052"
+      plaintext: true
+    portfolio:
+      address: "localhost:50053"
+      plaintext: true
+    transaction:
+      address: "localhost:50054"
+      plaintext: true

@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base/common/postgres-deployment.yaml
+  - ../../base/common/postgres-service.yaml
+  - ../../base/common/kafka-deployment.yaml
+  - ../../base/common/kafka-service.yaml
+  - ../../base/common/rabbitmq-deployment.yaml
+  - ../../base/common/rabbitmq-service.yaml
+  - ../../base/common/redis-deployment.yaml
+  - ../../base/common/redis-service.yaml
+  - ../../base/reservation-service/deployment.yaml
+  - ../../base/reservation-service/service.yaml
+  - ../../base/notification-service/deployment.yaml
+  - ../../base/notification-service/service.yaml
+  - ../../base/analytics-service/deployment.yaml
+  - ../../base/analytics-service/service.yaml
+  - ../../base/api-server/deployment.yaml
+  - ../../base/api-server/service.yaml

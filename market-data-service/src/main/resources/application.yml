@@ -1,0 +1,14 @@
+micronaut:
+  application:
+    name: market-data-service
+  server:
+    host: 0.0.0.0
+    port: 8081
+
+grpc:
+  server:
+    port: 50052       # port, na którym działa gRPC
+
+twelvedata:
+  base-url: https://api.twelvedata.com
+  apikey: ce7d183bf8314c059f7117d2ff75a8a4
