@@ -1,16 +1,16 @@
 package sood.found;
 
 import io.micronaut.serde.annotation.Serdeable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Serdeable
 public record TransactionCreatedEvent(
-        String userId,
-        String foundName,
+        Long portfolioId,
         String symbol,
         double quantity,
-        double price,
-        String type,
+        BigDecimal price,
+        TransactionType type,
         LocalDate date
 ) {
 }

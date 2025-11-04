@@ -15,8 +15,6 @@
 
     <modules>
         <module>api-model</module>
-        <module>notification-service</module>
-        <module>analytics-service</module>
         <module>api-server</module>
         <module>market-data-service</module>
         <module>portfolio-service</module>

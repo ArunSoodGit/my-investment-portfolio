@@ -2,6 +2,7 @@ package com.sood.portfolio.model;
 
 import com.example.market.grpc.PortfolioResponse;
 import io.micronaut.serde.annotation.Serdeable;
+import java.math.BigDecimal;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,10 +14,13 @@ import lombok.Data;
 @Serdeable
 public class PortfolioDTO {
 
+    private final Long id;
     private final String userId;
-    private final Double totalInvested;
-    private final Double totalCurrentValue;
-    private final Double totalProfitLoss;
+    private final String portfolioName;
+    private final BigDecimal totalInvested;
+    private final BigDecimal totalCurrentValue;
+    private final BigDecimal totalProfit;
+    private final String totalProfitPercentage;
     private final List<PortfolioItemDTO> items;
 
     public static PortfolioDTO fromProto(final PortfolioResponse proto) {
@@ -25,10 +29,13 @@ public class PortfolioDTO {
                 .toList();
 
         return PortfolioDTO.builder()
+                .id(proto.getPortfolioId())
                 .userId(proto.getUserId())
-                .totalInvested(proto.getTotalInvestedValue())
-                .totalCurrentValue(proto.getTotalCurrentValue())
-                .totalProfitLoss(proto.getTotalProfitValue())
+                .portfolioName(proto.getPortfolioName())
+                .totalInvested(new BigDecimal(proto.getInvestedValue()))
+                .totalCurrentValue(new BigDecimal(proto.getCurrentValue()))
+                .totalProfit(new BigDecimal(proto.getProfitValue()))
+                .totalProfitPercentage(proto.getProfitPercentage())
                 .items(items)
                 .build();
     }

@@ -43,6 +43,11 @@
             <groupId>io.micronaut</groupId>
             <artifactId>micronaut-management</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.micronaut</groupId>
+            <artifactId>micronaut-jackson-databind</artifactId>
+            <version>4.10.7</version>
+        </dependency>
 
         <!-- Micronaut gRPC runtime -->
         <dependency>
@@ -51,25 +56,27 @@
             <version>4.12.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.micronaut</groupId>
+            <artifactId>micronaut-inject</artifactId>
+        </dependency>
+
         <!-- gRPC Netty shaded -->
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty-shaded</artifactId>
-            <version>1.75.0</version>
         </dependency>
 
         <!-- gRPC protobuf -->
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-protobuf</artifactId>
-            <version>1.75.0</version>
         </dependency>
 
         <!-- gRPC stub (klasy do klienta i serwera) -->
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-stub</artifactId>
-            <version>1.75.0</version>
         </dependency>
 
         <!-- Protobuf (kompilator prototypów) -->
@@ -78,11 +85,36 @@
             <artifactId>protobuf-java</artifactId>
             <version>3.25.8</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java-util</artifactId>
+            <version>4.31.0</version>
+        </dependency>
+
+        <!-- rxjava -->
+        <dependency>
+            <groupId>io.micronaut</groupId>
+            <artifactId>micronaut-runtime</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micronaut.rxjava3</groupId>
+            <artifactId>micronaut-rxjava3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.reactivex.rxjava3</groupId>
+            <artifactId>rxjava</artifactId>
+            <version>3.1.12</version>
+        </dependency>
 
         <!-- Hibernate/JPA + Hikari + PostgreSQL driver -->
         <dependency>
             <groupId>io.micronaut.data</groupId>
             <artifactId>micronaut-data-hibernate-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micronaut.data</groupId>
+            <artifactId>micronaut-data-processor</artifactId>
+            <version>${micronaut.data.version}</version>
         </dependency>
         <dependency>
             <groupId>io.micronaut.sql</groupId>
@@ -92,6 +124,11 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micronaut.redis</groupId>
+            <artifactId>micronaut-redis-lettuce</artifactId>
         </dependency>
 
         <!-- Kafka -->
@@ -159,6 +196,11 @@
                             <groupId>io.micronaut</groupId>
                             <artifactId>micronaut-inject-java</artifactId>
                             <version>${micronaut.version}</version>
+                        </path>
+                        <path>
+                            <groupId>io.micronaut.data</groupId>
+                            <artifactId>micronaut-data-processor</artifactId>
+                            <version>${micronaut.data.version}</version>
                         </path>
                     </annotationProcessorPaths>
                     <compilerArgs>

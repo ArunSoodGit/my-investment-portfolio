@@ -8,7 +8,7 @@ datasources:
   default:
     url: jdbc:postgresql://ep-royal-star-ahw87sxu-pooler.c-3.us-east-1.aws.neon.tech/found?sslmode=require
     username: neondb_owner
-    password: npg_5QLOhgFeyRE7
+    password: npg_EUzkDuIs76ae
     driverClassName: org.postgresql.Driver
 
 jpa:
@@ -17,7 +17,6 @@ jpa:
       hibernate:
         hbm2ddl:
           auto: update
-        show_sql: true
 
 kafka:
   bootstrap:
@@ -28,6 +27,10 @@ kafka:
 grpc:
   server:
     port: 50054
+  channels:
+    marketdata:
+      address: "localhost:50052"
+      plaintext: true
 
 twelvedata:
   base-url: https://api.twelvedata.com

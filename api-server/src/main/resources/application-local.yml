@@ -1,8 +1,7 @@
 micronaut:
   application:
     name: api-server
-  server:
-    port: 8080
+
 
 grpc:
   channels:
