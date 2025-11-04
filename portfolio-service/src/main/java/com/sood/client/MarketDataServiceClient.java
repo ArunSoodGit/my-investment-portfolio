@@ -1,0 +1,30 @@
+package com.sood.client;
+
+
+import com.example.market.grpc.MarketDataRequest;
+import com.example.market.grpc.MarketDataResponse;
+import com.example.market.grpc.MarketDataServiceGrpc;
+import io.micronaut.grpc.annotation.GrpcChannel;
+import io.reactivex.rxjava3.core.Single;
+import jakarta.inject.Singleton;
+
+@Singleton
+public class MarketDataServiceClient {
+
+    private final MarketDataServiceGrpc.MarketDataServiceFutureStub stub;
+
+    public MarketDataServiceClient(@GrpcChannel("marketdata") io.grpc.Channel channel) {
+        this.stub = MarketDataServiceGrpc.newFutureStub(channel);
+    }
+
+    /**
+     * Reaktywne pobranie danych giełdowych dla danego symbolu.
+     */
+    public Single<MarketDataResponse> getMarketData(final String symbol) {
+        final MarketDataRequest request = MarketDataRequest.newBuilder()
+                .setSymbol(symbol)
+                .build();
+
+        return Single.fromFuture(stub.getMarketData(request));
+    }
+}

@@ -1,9 +1,8 @@
 package com.sood.portfolio.model;
 
 import com.example.market.grpc.PortfolioItem;
-import com.example.market.grpc.TransactionInfo;
 import io.micronaut.serde.annotation.Serdeable;
-import java.util.List;
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,34 +13,31 @@ import lombok.Data;
 @Serdeable
 public class PortfolioItemDTO {
 
-    final String symbol;
-    final String name;
-    final String type;
-    final double quantity;
-    final double purchasePrice;
-    final double currentPrice;
-    final String currency;
-    final String purchaseDate;
-    final double totalValue;
-    final double profitLoss;
-    final List<TransactionInfoDTO> transactionInfos;
+    private final String symbol;
+    private final String name;
+    private final String exchange;
+    private final BigDecimal currentPrice;
+    private final double totalQuantity;
+    private final BigDecimal totalValue;
+    private final BigDecimal averagePurchasePrice;
+    private final String percentageChange;
+    private final String currency;
+    private final BigDecimal profit;
+    private final String profitPercentage;
 
     public static PortfolioItemDTO fromProto(final PortfolioItem proto) {
-        final List<TransactionInfoDTO> transactionInfos = proto.getBuyTransactionsList().stream()
-                .map(TransactionInfoDTO::fromProto)
-                .toList();
-
         return PortfolioItemDTO.builder()
                 .symbol(proto.getSymbol())
                 .name(proto.getName())
-                .quantity(proto.getQuantity())
-                .purchasePrice(proto.getPurchasePrice())
-                .currentPrice(proto.getCurrentPrice())
+                .exchange(proto.getExchange())
+                .totalQuantity(proto.getQuantity())
+                .averagePurchasePrice(new BigDecimal(proto.getAveragePurchasePrice()))
+                .percentageChange(proto.getPercentageChange())
+                .currentPrice(new BigDecimal(proto.getCurrentPrice()))
                 .currency(proto.getCurrency())
-                .purchaseDate(proto.getPurchaseDate())
-                .totalValue(proto.getTotalValue())
-                .profitLoss(proto.getProfit())
-                .transactionInfos(transactionInfos)
+                .totalValue(new BigDecimal(proto.getTotalValue()))
+                .profit(new BigDecimal(proto.getProfit()))
+                .profitPercentage(proto.getProfitPercentage())
                 .build();
     }
 }

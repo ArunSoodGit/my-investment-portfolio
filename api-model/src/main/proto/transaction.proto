@@ -1,30 +1,53 @@
 syntax = "proto3";
 
+option java_multiple_files = true;
+option java_package = "com.example.market.grpc";
+option java_outer_classname = "TransactionProto";
 package market;
 
-// Typ transakcji
-enum TransactionType {
-  BUY = 0;
-  SELL = 1;
+// Pojedyncza transakcja w odpowiedzi
+message Transaction {
+  int64 id = 1;
+  string symbol = 2;
+  double quantity = 3;
+  double price = 4;
+  double currentPrice = 5;
+  string date = 6; // np. "2025-11-03"
+  string profitPercentage = 7; // opcjonalne, jeśli potrzebne
 }
 
 // Żądanie dodania transakcji
-message TransactionRequest {
-  string userId = 1;
-  string foundName = 2;
-  string symbol = 3;
-  double quantity = 4;
-  double price = 5;
-  TransactionType type = 6;
-  string date = 7; // np. "2025-11-03"
+message TransactionAddRequest {
+  int64 portfolioId = 1;
+  string symbol = 2;
+  double quantity = 3;
+  double price = 4;
+  string date = 5; // np. "2025-11-03"
 }
 
-// Odpowiedź serwisu
+message TransactionRemoveRequest {
+  int64 transactionId = 1;
+}
+
+message TransactionGetRequest {
+  int64 portfolioId = 1;
+  string symbol = 2;
+}
+
+// Odpowiedź serwisu przy pobieraniu wielu transakcji
+message TransactionGetResponse {
+  string status = 1; // OK / ERROR
+  repeated Transaction transactions = 2; // lista transakcji
+}
+
+// Odpowiedź serwisu dla dodawania/usuwania transakcji
 message TransactionResponse {
   string status = 1; // OK / ERROR
 }
 
-// Serwis do dodawania transakcji
+// Serwis do obsługi transakcji
 service TransactionService {
-  rpc AddTransaction(TransactionRequest) returns (TransactionResponse);
+  rpc AddTransaction(TransactionAddRequest) returns (TransactionResponse);
+  rpc RemoveTransaction(TransactionRemoveRequest) returns (TransactionResponse);
+  rpc GetTransactions(TransactionGetRequest) returns (TransactionGetResponse);
 }
