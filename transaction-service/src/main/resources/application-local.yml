@@ -2,7 +2,7 @@ micronaut:
   application:
     name: market-data-service
   server:
-    port: 8083
+    port: 8084
 
 datasources:
   default:
@@ -27,7 +27,7 @@ kafka:
 
 grpc:
   server:
-    port: 50053
+    port: 50054
 
 twelvedata:
   base-url: https://api.twelvedata.com

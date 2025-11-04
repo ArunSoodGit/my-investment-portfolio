@@ -11,11 +11,12 @@ enum TransactionType {
 // Żądanie dodania transakcji
 message TransactionRequest {
   string userId = 1;
-  string symbol = 2;
-  double quantity = 3;
-  double price = 4;
-  TransactionType type = 5;
-  string date = 6; // np. "2025-11-03"
+  string foundName = 2;
+  string symbol = 3;
+  double quantity = 4;
+  double price = 5;
+  TransactionType type = 6;
+  string date = 7; // np. "2025-11-03"
 }
 
 // Odpowiedź serwisu

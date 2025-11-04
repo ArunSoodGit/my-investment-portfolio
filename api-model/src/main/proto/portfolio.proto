@@ -10,32 +10,47 @@ package market;
 
 message PortfolioRequest {
   string userId = 1; // Identyfikator użytkownika
+  string foundName = 2; // Identyfikator użytkownika
 }
 
 // ====== MODELE ======
+
+// Informacje o pojedynczej transakcji BUY
+message TransactionInfo {
+  string date = 1;   // np. "2025-11-03"
+  double purchasePrice = 2;  // cena zakupu
+  double actualPrice = 3;  // cena zakupu
+  double quantity = 4; // liczba jednostek
+}
 
 // Pojedynczy składnik portfela
 message PortfolioItem {
   string symbol = 1;          // np. "AAPL"
   string name = 2;            // np. "Apple Inc."
-  double quantity = 3;        // liczba jednostek / akcji
-  double purchasePrice = 4;   // cena zakupu za jednostkę
-  double currentPrice = 5;     // aktualna cena rynkowa
+  double quantity = 3;        // liczba jednostek / akcji aktualnie w portfelu
+  double purchasePrice = 4;   // cena ostatniego zakupu
+  double currentPrice = 5;    // aktualna cena rynkowa
   string currency = 6;        // np. "USD"
-  string purchaseDate = 7;    // ISO-8601 np. "2023-01-15"
+  string purchaseDate = 7;    // data ostatniego zakupu (ISO-8601)
   double totalValue = 8;      // obliczona wartość (quantity * currentPrice)
-  double profit = 9;     // zysk/strata (totalValue - purchasePrice * quantity)
+  double profit = 9;          // zysk/strata (totalValue - purchasePrice * quantity)
+
+  // Pola pomocnicze do historii BUY
+  double totalBoughtQuantity = 10;        // suma wszystkich jednostek zakupionych
+  double totalInvested = 11;              // całkowity koszt wszystkich BUY
+  double averagePurchasePrice = 12;       // średnia cena zakupu
+  repeated TransactionInfo buyTransactions = 13; // lista historii transakcji BUY
 }
 
 // ====== RESPONSES ======
 
 message PortfolioResponse {
   string userId = 1;
-  double totalInvestedValue = 2;              // suma kosztów zakupu
-  double totalCurrentValue = 3;          // suma aktualnych wartości
-  double totalProfitValue = 4;            // zysk/strata całkowity
-  repeated PortfolioItem items = 5;      // lista składników portfela
-  string lastUpdated = 6;                // data aktualizacji portfela
+  double totalInvestedValue = 2;           // suma kosztów zakupu
+  double totalCurrentValue = 3;            // suma aktualnych wartości
+  double totalProfitValue = 4;             // zysk/strata całkowity
+  repeated PortfolioItem items = 5;        // lista składników portfela
+  string lastUpdated = 6;                  // data aktualizacji portfela
 }
 
 // ====== SERVICE ======

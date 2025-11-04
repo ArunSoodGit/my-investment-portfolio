@@ -1,9 +1,9 @@
 package com.sood;
 
 import com.sood.portfolio.PortfolioGrpcClient;
-import com.sood.transaction.TransactionGrpcClient;
 import com.sood.portfolio.model.PortfolioDTO;
 import com.sood.transaction.TransactionDTO;
+import com.sood.transaction.TransactionGrpcClient;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -26,16 +26,16 @@ public class ApiGatewayController {
         this.transactionClient = transactionClient;
     }
 
-    @Get("/portfolio/{userId}")
-    public Mono<PortfolioDTO> getPortfolio(@PathVariable final String userId) {
-        return Mono.fromCallable(() -> portfolioClient.getPortfolio(userId)).map(PortfolioDTO::fromProto);
+    @Get("/portfolio/{userId}/{foundName}")
+    public Mono<PortfolioDTO> getPortfolio(@PathVariable final String userId, @PathVariable final String foundName) {
+        return Mono.fromCallable(() -> portfolioClient.getPortfolio(userId, foundName)).map(PortfolioDTO::fromProto);
     }
 
-    @Post("/portfolio/{userId}/transaction")
-    public Mono<Boolean> addTransaction(@PathVariable String userId,
+    @Post("/portfolio/{userId}/{foundName}/transaction")
+    public Mono<Boolean> addTransaction(@PathVariable String userId, @PathVariable final String foundName,
             @Body TransactionDTO transactionDTO) {
         return Mono.fromCallable(() -> {
-            final Transaction.TransactionResponse response = transactionClient.addTransaction(userId, transactionDTO);
+            final Transaction.TransactionResponse response = transactionClient.addTransaction(userId, foundName, transactionDTO);
             return "OK".equals(response.getStatus());
         }).subscribeOn(Schedulers.boundedElastic());
     }

@@ -20,6 +20,7 @@
         <module>api-server</module>
         <module>market-data-service</module>
         <module>portfolio-service</module>
+        <module>transaction-service</module>
     </modules>
 
   <properties>

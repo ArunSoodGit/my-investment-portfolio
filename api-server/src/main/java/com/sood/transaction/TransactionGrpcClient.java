@@ -14,9 +14,11 @@ public class TransactionGrpcClient {
         this.stub = TransactionServiceGrpc.newBlockingStub(channel);
     }
 
-    public Transaction.TransactionResponse addTransaction(final String userId, final TransactionDTO transactionDTO) {
+    public Transaction.TransactionResponse addTransaction(final String userId, final String foundName,
+            final TransactionDTO transactionDTO) {
         final Transaction.TransactionRequest request = Transaction.TransactionRequest.newBuilder()
                 .setUserId(userId)
+                .setFoundName(foundName)
                 .setSymbol(transactionDTO.getSymbol())
                 .setQuantity(transactionDTO.getQuantity())
                 .setPrice(transactionDTO.getPrice())

@@ -16,7 +16,7 @@ public class PortfolioGrpcEndpoint extends PortfolioServiceGrpc.PortfolioService
     @Override
     public void getPortfolio(final PortfolioRequest request, final StreamObserver<PortfolioResponse> responseObserver) {
         try {
-            final PortfolioResponse response = service.getPortfolio(request.getUserId());
+            final PortfolioResponse response = service.getPortfolio(request.getUserId(), request.getFoundName());
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         } catch (Exception e) {

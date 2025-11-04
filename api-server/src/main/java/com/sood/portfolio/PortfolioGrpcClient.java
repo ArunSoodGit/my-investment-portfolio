@@ -15,9 +15,10 @@ public class PortfolioGrpcClient {
         this.stub = PortfolioServiceGrpc.newBlockingStub(channel);
     }
 
-    public PortfolioResponse getPortfolio(final String userId) {
+    public PortfolioResponse getPortfolio(final String userId, final String foundName) {
         final PortfolioRequest request = PortfolioRequest.newBuilder()
                 .setUserId(userId)
+                .setFoundName(foundName)
                 .build();
         return stub.getPortfolio(request);
     }
