@@ -66,7 +66,8 @@ api-model zawiera klasy modelowe wspóldzielone przez różne mikroserwisy ( w t
 
 <img width="2396" height="1540" alt="image" src="https://github.com/user-attachments/assets/a58454c2-e083-4343-9f99-530392eb835e" />
 
-![Uploading image.png…]()
+<img width="2467" height="1745" alt="image" src="https://github.com/user-attachments/assets/0b5731a4-1f8d-4483-a992-d7dde8434f3e" />
+
 
 
 ## 🚀 Uruchamianie projektu
