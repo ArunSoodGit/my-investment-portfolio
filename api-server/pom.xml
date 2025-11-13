@@ -8,7 +8,7 @@
 
     <parent>
         <groupId>com.sood</groupId>
-        <artifactId>smart-reservation</artifactId>
+        <artifactId>my-investment-portfolio</artifactId>
         <version>0.1</version>
     </parent>
 
