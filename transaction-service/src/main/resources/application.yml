@@ -8,8 +8,8 @@ micronaut:
 datasources:
   default:
     url: jdbc:postgresql://ep-royal-star-ahw87sxu-pooler.c-3.us-east-1.aws.neon.tech/found?sslmode=require
-    username: neondb_owner
-    password: npg_5QLOhgFeyRE7
+    username: XXXXXX
+    password: XXXXXX
     driverClassName: org.postgresql.Driver
 
 jpa:
@@ -26,4 +26,4 @@ grpc:
 
 twelvedata:
   base-url: https://api.twelvedata.com
-  apikey: ce7d183bf8314c059f7117d2ff75a8a4
+  apikey: XXXXXXXXXXXX
