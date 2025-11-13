@@ -1,13 +1,19 @@
-# Etap build
+# =========================
+# Etap 1: Build (Maven + JDK)
+# =========================
 FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /app
 
-# Kopiujemy Maven Wrapper i .mvn
+# Ustaw JAVA_HOME dla Maven Wrapper
+ENV JAVA_HOME=/usr/lib/jvm/java-21-temurin
+ENV PATH=$JAVA_HOME/bin:$PATH
+
+# Kopiujemy Maven Wrapper i jego pliki
 COPY mvnw ./
 COPY .mvn .mvn
 RUN chmod +x mvnw
 
-# Kopiujemy wszystkie moduły + główny pom.xml
+# Kopiujemy cały projekt (multi-module)
 COPY pom.xml ./pom.xml
 COPY api-model api-model
 COPY api-server api-server
@@ -15,16 +21,20 @@ COPY market-data-service market-data-service
 COPY portfolio-service portfolio-service
 COPY transaction-service transaction-service
 
-# Budujemy cały projekt od razu, pomijając testy
+# Budujemy wszystkie moduły jednocześnie, pomijając testy
 RUN ./mvnw clean package -DskipTests
 
-# Etap run
+# =========================
+# Etap 2: Runtime (uruchomienie api-server)
+# =========================
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Kopiujemy tylko JAR api-server
+# Kopiujemy tylko gotowy JAR api-server z etapu build
 COPY --from=build /app/api-server/target/*.jar app.jar
 
+# Port, na którym działa api-server
 EXPOSE 8081
 
+# Polecenie startowe
 ENTRYPOINT ["java", "-jar", "app.jar"]
