@@ -1,10 +1,10 @@
 # =========================
 # Etap 1: Build (Maven + JDK)
 # =========================
-FROM eclipse-temurin:21-jdk-alpine AS build
+FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 
-# Ustaw JAVA_HOME dla Maven Wrapper
+# Ustaw JAVA_HOME i PATH (Debian-based obrazy Temurin mają już poprawnie)
 ENV JAVA_HOME=/usr/lib/jvm/java-21-temurin
 ENV PATH=$JAVA_HOME/bin:$PATH
 
@@ -21,13 +21,13 @@ COPY market-data-service market-data-service
 COPY portfolio-service portfolio-service
 COPY transaction-service transaction-service
 
-# Budujemy wszystkie moduły jednocześnie, pomijając testy
+# Budujemy wszystkie moduły, pomijając testy
 RUN ./mvnw clean package -DskipTests
 
 # =========================
 # Etap 2: Runtime (uruchomienie api-server)
 # =========================
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:21-jre
 WORKDIR /app
 
 # Kopiujemy tylko gotowy JAR api-server z etapu build
