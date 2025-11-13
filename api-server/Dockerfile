@@ -1,40 +1,35 @@
 # --------------------------
-# Etap build: budowanie api-server
+# Etap build: budowanie portfolio-service
 # --------------------------
 FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /app
 
-# Kopiujemy Maven Wrapper i główny pom
-COPY mvnw pom.xml ./
-COPY .mvn .mvn
-
-# Nadajemy prawa do wykonywania mvnw
+# Kopiujemy Maven Wrapper i pom.xml modułu portfolio-service
+COPY portfolio-service/pom.xml ./pom.xml
+COPY portfolio-service/.mvn .mvn
+COPY mvnw ./
 RUN chmod +x mvnw
 
 # Pobieramy zależności offline
 RUN ./mvnw dependency:go-offline
 
-# Kopiujemy wszystkie moduły potrzebne do budowy api-server
-COPY api-model api-model
-COPY api-server api-server
-COPY market-data-service market-data-service
-COPY portfolio-service portfolio-service
-COPY transaction-service transaction-service
+# Kopiujemy cały kod źródłowy portfolio-service
+COPY portfolio-service/src ./src
 
-# Budujemy cały projekt (pomijamy testy)
+# Budujemy projekt (pomijamy testy)
 RUN ./mvnw clean package -DskipTests
 
 # --------------------------
-# Etap run: uruchamianie api-server
+# Etap run: uruchamianie portfolio-service
 # --------------------------
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Kopiujemy JAR mikroserwisu api-server z etapu build
-COPY --from=build /app/api-server/target/*.jar app.jar
+# Kopiujemy JAR z etapu build
+COPY --from=build /app/target/*.jar app.jar
 
-# Port, na którym aplikacja będzie nasłuchiwać w Railway
-EXPOSE 8081
+# Port, na którym Railway uruchomi serwis
+EXPOSE 8080
 
 # Uruchomienie aplikacji
 ENTRYPOINT ["java", "-jar", "app.jar"]
