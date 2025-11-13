@@ -71,11 +71,6 @@ api-model zawiera klasy modelowe wspóldzielone przez różne mikroserwisy ( w t
 Każdy mikroserwis należy uruchamiać osobno.  
 Zalecane jest wykorzystanie **Docker Compose**, które automatycznie uruchomi Kafkę, Redisa i bazy danych.
 
-### 1️⃣ Klonowanie repozytorium
-```bash
-git clone https://github.com/<twoje-repo>/microservices-portfolio.git
-cd microservices-portfolio
-
 
 
 
