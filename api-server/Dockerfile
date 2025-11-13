@@ -2,23 +2,20 @@
 FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /app
 
-# Kopiujemy Maven Wrapper i główny pom.xml
-COPY pom.xml ./pom.xml
+# Kopiujemy Maven Wrapper i .mvn
 COPY mvnw ./
 COPY .mvn .mvn
 RUN chmod +x mvnw
 
-# Pobieramy zależności offline
-RUN ./mvnw dependency:go-offline
-
-# Kopiujemy moduły projektu
+# Kopiujemy wszystkie moduły + główny pom.xml
+COPY pom.xml ./pom.xml
 COPY api-model api-model
 COPY api-server api-server
 COPY market-data-service market-data-service
 COPY portfolio-service portfolio-service
 COPY transaction-service transaction-service
 
-# Budujemy cały projekt (pomijamy testy)
+# Budujemy cały projekt od razu, pomijając testy
 RUN ./mvnw clean package -DskipTests
 
 # Etap run
