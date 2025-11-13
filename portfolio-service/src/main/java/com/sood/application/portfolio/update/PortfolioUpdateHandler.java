@@ -1,4 +1,4 @@
-package com.sood.application.portfolio;
+package com.sood.application.portfolio.update;
 
 import com.sood.infrastructure.entity.PortfolioEntity;
 import com.sood.infrastructure.service.PortfolioService;
@@ -14,7 +14,7 @@ public class PortfolioUpdateHandler {
     private final PortfolioService portfolioService;
     private final PortfolioUpdateStrategyFactory portfolioUpdateStrategyFactory;
 
-    public PortfolioUpdateHandler(final PortfolioService portfolioService, PortfolioUpdateStrategyFactory updateStrategyFactory) {
+    public PortfolioUpdateHandler(final PortfolioService portfolioService, final PortfolioUpdateStrategyFactory updateStrategyFactory) {
         this.portfolioService = portfolioService;
         this.portfolioUpdateStrategyFactory = updateStrategyFactory;
     }

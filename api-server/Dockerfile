@@ -4,10 +4,6 @@
 FROM eclipse-temurin:21-jdk AS build
 WORKDIR /app
 
-# Ustaw JAVA_HOME i PATH (Debian-based obrazy Temurin mają już poprawnie)
-ENV JAVA_HOME=/usr/lib/jvm/java-21-temurin
-ENV PATH=$JAVA_HOME/bin:$PATH
-
 # Kopiujemy Maven Wrapper i jego pliki
 COPY mvnw ./
 COPY .mvn .mvn

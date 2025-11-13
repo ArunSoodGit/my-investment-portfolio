@@ -1,6 +1,6 @@
 package com.sood.infrastructure.event;
 
-import com.sood.application.portfolio.PortfolioUpdateHandler;
+import com.sood.application.portfolio.update.PortfolioUpdateHandler;
 import io.micronaut.configuration.kafka.annotation.KafkaListener;
 import io.micronaut.configuration.kafka.annotation.Topic;
 import sood.found.TransactionCreatedEvent;

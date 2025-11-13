@@ -1,4 +1,4 @@
-package com.sood.application.portfolio;
+package com.sood.application.portfolio.update;
 
 import com.sood.infrastructure.entity.PortfolioEntity;
 import jakarta.inject.Singleton;
