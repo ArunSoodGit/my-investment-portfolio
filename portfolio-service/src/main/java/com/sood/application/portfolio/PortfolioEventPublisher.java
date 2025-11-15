@@ -10,9 +10,8 @@ public class PortfolioEventPublisher {
 
     private static final PublishSubject<PortfolioEntity> subject = PublishSubject.create();
 
-    public static Observable<PortfolioEntity> getObservable(Long portfolioId) {
-        return subject
-                .filter(p -> p.getId().equals(portfolioId));
+    public static Observable<PortfolioEntity> getObservable(final Long portfolioId) {
+        return subject.filter(portfolio -> portfolio.getId().equals(portfolioId));
     }
 
     public static void emit(PortfolioEntity portfolio) {

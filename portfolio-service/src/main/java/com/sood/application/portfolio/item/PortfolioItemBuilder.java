@@ -5,7 +5,9 @@ import com.example.market.grpc.PortfolioItem;
 import com.sood.infrastructure.entity.PortfolioItemEntity;
 import jakarta.inject.Singleton;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+
+import static com.sood.application.portfolio.util.PriceUtils.format;
+import static com.sood.application.portfolio.util.PriceUtils.parsePrice;
 
 @Singleton
 public class PortfolioItemBuilder {
@@ -32,17 +34,5 @@ public class PortfolioItemBuilder {
                 .setProfitPercentage(itemSummary.profitPercentage())
                 .setPercentageChange(marketData.getPercentageChange())
                 .build();
-    }
-
-    private BigDecimal parsePrice(final String price) {
-        try {
-            return new BigDecimal(price).setScale(2, RoundingMode.HALF_UP);
-        } catch (NumberFormatException e) {
-            return BigDecimal.ZERO;
-        }
-    }
-
-    private String format(final BigDecimal value) {
-        return value.setScale(2, RoundingMode.HALF_UP).toPlainString();
     }
 }

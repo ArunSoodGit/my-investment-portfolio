@@ -12,12 +12,16 @@ public class PortfolioHistoryResponseBuilder {
     public PortfolioHistoryResponse build(final List<PortfolioHistoryEntity> portfolioHistoryEntities) {
         return PortfolioHistoryResponse.newBuilder()
                 .addAllItems(portfolioHistoryEntities.stream()
-                        .map(portfolioHistoryEntity -> PortfolioHistoryItem.newBuilder()
-                                .setDate(String.valueOf(portfolioHistoryEntity.getDate()))
-                                .setInvestedValue(String.valueOf(portfolioHistoryEntity.getInvestedValue()))
-                                .setCurrentValue(String.valueOf(portfolioHistoryEntity.getCurrentValue()))
-                                .build())
+                        .map(PortfolioHistoryResponseBuilder::toHistoryItem)
                         .toList())
+                .build();
+    }
+
+    private static PortfolioHistoryItem toHistoryItem(final PortfolioHistoryEntity portfolioHistoryEntity) {
+        return PortfolioHistoryItem.newBuilder()
+                .setDate(String.valueOf(portfolioHistoryEntity.getDate()))
+                .setInvestedValue(String.valueOf(portfolioHistoryEntity.getInvestedValue()))
+                .setCurrentValue(String.valueOf(portfolioHistoryEntity.getCurrentValue()))
                 .build();
     }
 }
