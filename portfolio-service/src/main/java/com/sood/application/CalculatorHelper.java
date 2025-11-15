@@ -28,9 +28,4 @@ public final class CalculatorHelper {
         return profitValue.multiply(BigDecimal.valueOf(100))
                 .divide(investedValue, 2, RoundingMode.HALF_UP) + PERCENTAGE_SIGN;
     }
-
-    public static BigDecimal calculateAveragePurchasePrice(final BigDecimal investedValue, final double totalQuantity) {
-        return totalQuantity == 0.0 ? BigDecimal.ZERO :
-                investedValue.divide(BigDecimal.valueOf(totalQuantity), 2, RoundingMode.HALF_UP);
-    }
 }
