@@ -1,37 +1,33 @@
-package com.sood.cache;
+package com.sood.application.portfolio.provider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sood.infrastructure.entity.PortfolioEntity;
-import com.sood.infrastructure.service.PortfolioService;
 import io.lettuce.core.api.sync.RedisCommands;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
-import java.util.Optional;
 
 @Singleton
-public class PortfolioCacheManager {
+public class PortfolioCacheSource implements PortfolioSource {
 
     private final RedisCommands<String, String> redis;
     private final ObjectMapper objectMapper;
-    private final PortfolioService portfolioService;
 
-    public PortfolioCacheManager(@Named("mainRedis") final RedisCommands<String, String> redis,
-            final ObjectMapper objectMapper, final PortfolioService portfolioService) {
+    public PortfolioCacheSource(@Named("mainRedis") final RedisCommands<String, String> redis,
+            final ObjectMapper objectMapper) {
         this.redis = redis;
         this.objectMapper = objectMapper;
-        this.portfolioService = portfolioService;
     }
 
+    @Override
     public PortfolioEntity get(final Long portfolioId) {
-        return Optional.ofNullable(getFromRedis(portfolioId, PortfolioEntity.class))
-                .orElseGet(() -> fromDb(portfolioId));
+        return getFromRedis(portfolioId, PortfolioEntity.class);
     }
 
     public void put(final PortfolioEntity portfolio) {
         putToRedis(portfolio.getId(), portfolio);
     }
 
-    private <T> T getFromRedis(Long key, Class<T> clazz) {
+    private <T> T getFromRedis(final Long key, Class<T> clazz) {
         try {
             String value = redis.get(key.toString() + "PORTFOLIO");
             if (value != null) {
@@ -43,17 +39,11 @@ public class PortfolioCacheManager {
         return null;
     }
 
-    private void putToRedis(Long key, Object value) {
+    private void putToRedis(final Long key, final Object value) {
         try {
             redis.set(key.toString() + "PORTFOLIO", objectMapper.writeValueAsString(value));
         } catch (Exception e) {
             // log error
         }
-    }
-
-    private PortfolioEntity fromDb(final Long portfolioId) {
-        final PortfolioEntity portfolio = portfolioService.getPortfolio(portfolioId);
-        put(portfolio);
-        return portfolio;
     }
 }

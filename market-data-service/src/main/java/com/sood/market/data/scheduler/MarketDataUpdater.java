@@ -56,8 +56,8 @@ public class MarketDataUpdater {
         return twelveDataClient.getResponse(authHeader, symbol)
                 .flatMap(json -> {
                     try {
-                        TwelveDataResponse response = objectMapper.readValue(json, TwelveDataResponse.class);
-                        MarketDataResponse grpcResponse = mapToGrpc(response);
+                        final TwelveDataResponse response = objectMapper.readValue(json, TwelveDataResponse.class);
+                        final MarketDataResponse grpcResponse = mapToGrpc(response);
                         return cache.put(symbol, grpcResponse)
                                 .toSingleDefault(grpcResponse);
                     } catch (Exception e) {
@@ -66,7 +66,7 @@ public class MarketDataUpdater {
                 });
     }
 
-    private MarketDataResponse mapToGrpc(TwelveDataResponse response) {
+    private MarketDataResponse mapToGrpc(final TwelveDataResponse response) {
         return MarketDataResponse.newBuilder()
                 .setPrice(response.getClose())
                 .setPercentageChange(new BigDecimal(response.getPercent_change())

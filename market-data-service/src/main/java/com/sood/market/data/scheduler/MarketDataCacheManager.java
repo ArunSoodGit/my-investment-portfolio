@@ -1,7 +1,6 @@
 package com.sood.market.data.scheduler;
 
 import com.example.market.grpc.MarketDataResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.util.JsonFormat;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.reactivex.rxjava3.core.Completable;
@@ -19,12 +18,9 @@ public class MarketDataCacheManager {
     private static final Logger log = LoggerFactory.getLogger(MarketDataCacheManager.class);
 
     private final RedisCommands<String, String> redis;
-    private final ObjectMapper objectMapper;
 
-    public MarketDataCacheManager(@Named("mainRedis") final RedisCommands<String, String> redis,
-            final ObjectMapper objectMapper) {
+    public MarketDataCacheManager(@Named("mainRedis") final RedisCommands<String, String> redis) {
         this.redis = redis;
-        this.objectMapper = objectMapper;
     }
 
     public Completable put(final String symbol, final MarketDataResponse data) {
@@ -41,10 +37,10 @@ public class MarketDataCacheManager {
 
     public Maybe<MarketDataResponse> get(final String symbol) {
         return Maybe.fromCallable(() -> {
-            String value = redis.get("market:" + symbol);
+            final String value = redis.get("market:" + symbol);
             if (value == null) return null;
 
-            MarketDataResponse.Builder builder = MarketDataResponse.newBuilder();
+            final MarketDataResponse.Builder builder = MarketDataResponse.newBuilder();
             JsonFormat.parser().ignoringUnknownFields().merge(value, builder);
             return builder.build();
         });
@@ -54,7 +50,7 @@ public class MarketDataCacheManager {
     public Completable putSymbol(final String symbol) {
         return Completable.fromRunnable(() -> {
             try {
-                redis.sadd("market:all_symbols", symbol); // tutaj SADD jest poprawne
+                redis.sadd("market:all_symbols", symbol);
             } catch (Exception e) {
                 log.error("Błąd zapisu symbolu do cache: {}", symbol, e);
                 throw new RuntimeException(e);

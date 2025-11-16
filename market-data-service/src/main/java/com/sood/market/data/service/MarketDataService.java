@@ -37,11 +37,10 @@ public class MarketDataService {
 
     public void refreshMarketData() {
         repository.deleteAll();
-        // Pobierz symbole z cache
         final Set<String> symbols = cache.getAllSymbols().blockingGet();
         symbols.stream()
-                .map(symbol -> cache.get(symbol).blockingGet()) // pobierz dane z cache
-                .filter(Objects::nonNull)                       // odfiltruj puste wpisy
+                .map(symbol -> cache.get(symbol).blockingGet())
+                .filter(Objects::nonNull)
                 .forEach(data -> {
                     try {
                         final MarketDataEntity entity = new MarketDataEntity();
