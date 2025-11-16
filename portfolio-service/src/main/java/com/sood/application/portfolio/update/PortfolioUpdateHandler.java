@@ -14,7 +14,8 @@ public class PortfolioUpdateHandler {
     private final PortfolioService portfolioService;
     private final PortfolioUpdateStrategyFactory portfolioUpdateStrategyFactory;
 
-    public PortfolioUpdateHandler(final PortfolioService portfolioService, final PortfolioUpdateStrategyFactory updateStrategyFactory) {
+    public PortfolioUpdateHandler(final PortfolioService portfolioService,
+            final PortfolioUpdateStrategyFactory updateStrategyFactory) {
         this.portfolioService = portfolioService;
         this.portfolioUpdateStrategyFactory = updateStrategyFactory;
     }

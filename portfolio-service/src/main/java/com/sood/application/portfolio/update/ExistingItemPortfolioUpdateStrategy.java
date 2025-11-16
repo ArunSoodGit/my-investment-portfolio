@@ -2,7 +2,7 @@ package com.sood.application.portfolio.update;
 
 import com.sood.application.portfolio.PortfolioEventPublisher;
 import com.sood.application.portfolio.item.PortfolioItemFactory;
-import com.sood.cache.PortfolioCacheManager;
+import com.sood.application.portfolio.provider.PortfolioCacheSource;
 import com.sood.infrastructure.entity.PortfolioEntity;
 import com.sood.infrastructure.entity.PortfolioItemEntity;
 import com.sood.infrastructure.repository.PortfolioRepository;
@@ -16,10 +16,10 @@ public class ExistingItemPortfolioUpdateStrategy implements PortfolioUpdateStrat
 
     private final PortfolioItemFactory itemFactory;
     private final PortfolioRepository repository;
-    private final PortfolioCacheManager cacheManager;
+    private final PortfolioCacheSource cacheManager;
 
     public ExistingItemPortfolioUpdateStrategy(final PortfolioItemFactory itemFactory, final PortfolioRepository repository,
-            final PortfolioCacheManager cacheManager) {
+            final PortfolioCacheSource cacheManager) {
         this.itemFactory = itemFactory;
         this.repository = repository;
         this.cacheManager = cacheManager;
