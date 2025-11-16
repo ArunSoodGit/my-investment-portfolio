@@ -8,6 +8,8 @@ import java.util.List;
 @Singleton
 public class TransactionService {
 
+    private static final String TRANSACTION_NOT_FOUND_MESSAGE = "Transaction with ID %d not found";
+
     private final TransactionRepository repository;
 
     public TransactionService(final TransactionRepository repository) {
@@ -17,7 +19,7 @@ public class TransactionService {
     public TransactionEntity findByTransactionId(final Long transactionId) {
         return repository.findById(transactionId)
                 .orElseThrow(() -> new IllegalArgumentException(
-                        String.format("Transaction with ID %d not found", transactionId)
+                        String.format(TRANSACTION_NOT_FOUND_MESSAGE, transactionId)
                 ));
     }
 
