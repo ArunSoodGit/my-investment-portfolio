@@ -6,9 +6,21 @@ import jakarta.inject.Singleton;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+/**
+ * Calculates individual portfolio item metrics.
+ * Computes financial data for a single stock position including profit/loss.
+ */
 @Singleton
 public class PortfolioItemCalculator {
 
+    /**
+     * Calculates financial metrics for a portfolio item.
+     * Determines current value, invested value, profit, and percentage change.
+     *
+     * @param entity the portfolio item entity
+     * @param currentPrice the current stock price
+     * @return summary with calculated metrics for the item
+     */
     public PortfolioItemSummary calculate(final PortfolioItemEntity entity, final BigDecimal currentPrice) {
         if (entity == null || currentPrice == null) {
             return emptySummary();

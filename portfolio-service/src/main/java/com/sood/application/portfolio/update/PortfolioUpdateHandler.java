@@ -7,6 +7,10 @@ import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import sood.found.TransactionCreatedEvent;
 
+/**
+ * Handles portfolio updates based on transaction events.
+ * Uses strategy pattern to apply appropriate update logic based on transaction type.
+ */
 @Singleton
 @Slf4j
 public class PortfolioUpdateHandler {
@@ -20,6 +24,12 @@ public class PortfolioUpdateHandler {
         this.portfolioUpdateStrategyFactory = updateStrategyFactory;
     }
 
+    /**
+     * Processes a transaction event and updates the portfolio accordingly.
+     * Executes within a database transaction to ensure consistency.
+     *
+     * @param event the transaction created event to process
+     */
     @Transactional
     public void handle(final TransactionCreatedEvent event) {
         final Long portfolioId = event.portfolioId();

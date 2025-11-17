@@ -10,6 +10,11 @@ import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import sood.found.TransactionCreatedEvent;
 
+/**
+ * Updates an existing portfolio item based on a transaction.
+ * Handles buy and sell operations for positions already in the portfolio.
+ * Removes positions when quantity reaches zero and emits update events.
+ */
 @Singleton
 @Slf4j
 public class ExistingItemPortfolioUpdateStrategy implements PortfolioUpdateStrategy {
@@ -25,6 +30,13 @@ public class ExistingItemPortfolioUpdateStrategy implements PortfolioUpdateStrat
         this.cacheManager = cacheManager;
     }
 
+    /**
+     * Updates an existing portfolio item with a new transaction.
+     * Persists changes to database, cache, and emits event for subscribers.
+     *
+     * @param portfolio the portfolio entity
+     * @param event the transaction event
+     */
     @Override
     public void update(final PortfolioEntity portfolio, final TransactionCreatedEvent event) {
         final String symbol = event.symbol();

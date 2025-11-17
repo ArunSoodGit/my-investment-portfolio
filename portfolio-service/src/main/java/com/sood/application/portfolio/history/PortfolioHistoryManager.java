@@ -11,6 +11,10 @@ import com.sood.infrastructure.service.PortfolioService;
 import jakarta.inject.Singleton;
 import java.util.List;
 
+/**
+ * Manages portfolio history operations.
+ * Handles retrieval and persistence of portfolio snapshots and their history data.
+ */
 @Singleton
 public class PortfolioHistoryManager {
 
@@ -26,12 +30,24 @@ public class PortfolioHistoryManager {
         this.portfolioService = portfolioService;
     }
 
+    /**
+     * Retrieves portfolio history for a given portfolio ID.
+     *
+     * @param portfolioId the portfolio identifier
+     * @return the portfolio history response
+     */
     public PortfolioHistoryResponse get(final Long portfolioId) {
         final PortfolioEntity portfolio = portfolioService.getPortfolio(portfolioId);
         final List<PortfolioHistoryEntity> portfolioHistoryEntities = historyService.findByPortfolio(portfolio);
         return responseBuilder.build(portfolioHistoryEntities);
     }
 
+    /**
+     * Saves a portfolio snapshot as history.
+     * Transforms portfolio response data into history entity format.
+     *
+     * @param response the portfolio response to save
+     */
     public void save(final PortfolioResponse response) {
         final PortfolioEntity portfolio = portfolioService.getPortfolio(response.getPortfolioId());
         final List<SnapshotStockData> snapshotData = response.getItemsList().stream()

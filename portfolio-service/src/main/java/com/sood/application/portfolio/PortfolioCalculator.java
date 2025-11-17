@@ -3,12 +3,25 @@ package com.sood.application.portfolio;
 import com.example.market.grpc.PortfolioItem;
 import com.sood.application.CalculatorHelper;
 import jakarta.inject.Singleton;
+import lombok.extern.log4j.Log4j2;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * Calculates portfolio-level financial metrics.
+ * Aggregates data from individual portfolio items to compute total values and profit/loss.
+ */
 @Singleton
+@Log4j2
 public class PortfolioCalculator {
 
+    /**
+     * Creates a summary of the portfolio's financial metrics.
+     * Calculates total current value, invested value, profit, and percentage change.
+     *
+     * @param items list of portfolio items
+     * @return portfolio summary with aggregated metrics
+     */
     public PortfolioSummary summarize(final List<PortfolioItem> items) {
         final BigDecimal currentValue = calculateCurrentValue(items);
         final BigDecimal investedValue = calculateInvestedValue(items);
@@ -25,7 +38,7 @@ public class PortfolioCalculator {
     }
 
     private BigDecimal calculateItemCurrentValue(final PortfolioItem item) {
-        final BigDecimal currentPrice = new BigDecimal(item.getCurrentPrice());
+        final BigDecimal currentPrice = parsePrice(item.getCurrentPrice());
         final double quantity = item.getQuantity();
         return CalculatorHelper.calculateTotalValue(currentPrice, quantity);
     }
@@ -37,8 +50,21 @@ public class PortfolioCalculator {
     }
 
     private BigDecimal calculateItemInvestedValue(final PortfolioItem item) {
-        final BigDecimal averagePurchasePrice = new BigDecimal(item.getAveragePurchasePrice());
+        final BigDecimal averagePurchasePrice = parsePrice(item.getAveragePurchasePrice());
         final double quantity = item.getQuantity();
-        return CalculatorHelper.calculateInvestedValue(averagePurchasePrice, quantity);
+        return CalculatorHelper.calculateTotalValue(averagePurchasePrice, quantity);
+    }
+
+    private BigDecimal parsePrice(final String priceStr) {
+        if (priceStr == null || priceStr.isBlank()) {
+            log.warn("Invalid price value: {}", priceStr);
+            return BigDecimal.ZERO;
+        }
+        try {
+            return new BigDecimal(priceStr);
+        } catch (NumberFormatException e) {
+            log.error("Failed to parse price: {}", priceStr, e);
+            return BigDecimal.ZERO;
+        }
     }
 }

@@ -7,9 +7,21 @@ import java.math.RoundingMode;
 import sood.found.TransactionCreatedEvent;
 import sood.found.TransactionType;
 
+/**
+ * Factory for creating and updating portfolio item entities.
+ * Handles the complex calculations for average purchase price and invested value
+ * when portfolio items are bought or sold.
+ */
 @Singleton
 public class PortfolioItemFactory {
 
+    /**
+     * Creates a new portfolio item from a transaction event.
+     * Initializes quantity and invested value based on transaction type.
+     *
+     * @param event the transaction created event
+     * @return new portfolio item entity
+     */
     public PortfolioItemEntity createItem(final TransactionCreatedEvent event) {
         final PortfolioItemEntity item = new PortfolioItemEntity();
         item.setSymbol(event.symbol());
@@ -21,9 +33,13 @@ public class PortfolioItemFactory {
     }
 
     /**
-     * Aktualizuje istniejącą pozycję na podstawie nowej transakcji.
-     * Dla BUY -> zwiększa ilość i przelicza średnią cenę zakupu.
-     * Dla SELL -> zmniejsza ilość, usuwa pozycję jeśli ilość <= 0.
+     * Updates an existing portfolio item based on a transaction.
+     * For BUY transactions: increases quantity and recalculates average purchase price.
+     * For SELL transactions: decreases quantity; removes position if quantity becomes <= 0.
+     *
+     * @param event the transaction event
+     * @param item the portfolio item to update
+     * @return the updated portfolio item
      */
     public PortfolioItemEntity updateItem(final TransactionCreatedEvent event, final PortfolioItemEntity item) {
         final double oldQuantity = item.getQuantity();

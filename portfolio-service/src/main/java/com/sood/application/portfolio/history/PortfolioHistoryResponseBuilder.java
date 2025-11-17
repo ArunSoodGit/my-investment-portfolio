@@ -6,9 +6,19 @@ import com.sood.infrastructure.entity.PortfolioHistoryEntity;
 import jakarta.inject.Singleton;
 import java.util.List;
 
+/**
+ * Builds gRPC portfolio history response objects from history entities.
+ * Transforms database history records into the gRPC response format.
+ */
 @Singleton
 public class PortfolioHistoryResponseBuilder {
 
+    /**
+     * Builds a gRPC PortfolioHistoryResponse from history entities.
+     *
+     * @param portfolioHistoryEntities list of portfolio history entities
+     * @return the constructed portfolio history response
+     */
     public PortfolioHistoryResponse build(final List<PortfolioHistoryEntity> portfolioHistoryEntities) {
         return PortfolioHistoryResponse.newBuilder()
                 .addAllItems(portfolioHistoryEntities.stream()

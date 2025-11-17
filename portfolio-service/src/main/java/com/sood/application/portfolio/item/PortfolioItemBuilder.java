@@ -9,6 +9,10 @@ import java.math.BigDecimal;
 import static com.sood.application.portfolio.util.PriceUtils.format;
 import static com.sood.application.portfolio.util.PriceUtils.parsePrice;
 
+/**
+ * Builds gRPC portfolio item responses from portfolio item entities and market data.
+ * Enriches portfolio items with calculated metrics and current market information.
+ */
 @Singleton
 public class PortfolioItemBuilder {
 
@@ -18,6 +22,14 @@ public class PortfolioItemBuilder {
         this.itemCalculator = itemCalculator;
     }
 
+    /**
+     * Builds a gRPC PortfolioItem from a portfolio item entity and market data.
+     * Calculates metrics like profit and includes current market information.
+     *
+     * @param entity the portfolio item entity
+     * @param marketData the current market data for the stock
+     * @return the constructed portfolio item response
+     */
     public PortfolioItem build(final PortfolioItemEntity entity, final MarketDataResponse marketData) {
         final BigDecimal currentPrice = parsePrice(marketData.getPrice());
         final PortfolioItemSummary itemSummary = itemCalculator.calculate(entity, currentPrice);

@@ -6,6 +6,10 @@ import com.sood.infrastructure.entity.PortfolioItemEntity;
 import io.reactivex.rxjava3.core.Single;
 import jakarta.inject.Singleton;
 
+/**
+ * Processes portfolio items by enriching them with current market data.
+ * Fetches the latest price information and builds complete portfolio item responses.
+ */
 @Singleton
 public class ItemProcessor {
 
@@ -17,6 +21,12 @@ public class ItemProcessor {
         this.itemBuilder = itemBuilder;
     }
 
+    /**
+     * Processes a portfolio item entity by fetching market data and building the response.
+     *
+     * @param itemEntity the portfolio item entity to process
+     * @return Single containing the processed portfolio item with current market data
+     */
     public Single<PortfolioItem> process(final PortfolioItemEntity itemEntity) {
         return client.getMarketData(itemEntity.getSymbol())
                 .map(marketData -> itemBuilder.build(itemEntity, marketData));

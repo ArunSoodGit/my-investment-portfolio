@@ -11,6 +11,10 @@ import lombok.extern.log4j.Log4j2;
 import sood.found.TransactionCreatedEvent;
 import sood.found.TransactionType;
 
+/**
+ * Adds new portfolio items to a portfolio based on buy transactions.
+ * Ignores sell transactions for non-existing positions and emits update events.
+ */
 @Singleton
 @Log4j2
 public class NewItemPortfolioUpdateStrategy implements PortfolioUpdateStrategy {
@@ -26,6 +30,14 @@ public class NewItemPortfolioUpdateStrategy implements PortfolioUpdateStrategy {
         this.cacheManager = cacheManager;
     }
 
+    /**
+     * Creates and adds a new portfolio item for buy transactions.
+     * Ignores sell transactions for non-existing positions.
+     * Persists changes and emits update events.
+     *
+     * @param portfolio the portfolio entity
+     * @param event the transaction event
+     */
     @Override
     public void update(final PortfolioEntity portfolio, final TransactionCreatedEvent event) {
         final String symbol = event.symbol();
