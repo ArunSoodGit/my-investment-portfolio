@@ -34,4 +34,13 @@ public class PortfolioEventListener {
             log.error("Failed to handle transaction event: {}", event, e);
         }
     }
+
+    @Topic("updated-data")
+    public void receive(String msg) {
+        try {
+            portfolioUpdateHandler.handle();
+        } catch (Exception e) {
+            log.error("Failed to handle updated data event: ", e);
+        }
+    }
 }

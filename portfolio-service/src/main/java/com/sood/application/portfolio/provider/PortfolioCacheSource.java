@@ -1,6 +1,8 @@
 package com.sood.application.portfolio.provider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sood.application.portfolio.dto.PortfolioDto;
+import com.sood.application.portfolio.dto.PortfolioMapper;
 import com.sood.infrastructure.entity.PortfolioEntity;
 import io.lettuce.core.api.sync.RedisCommands;
 import jakarta.inject.Named;
@@ -8,8 +10,9 @@ import jakarta.inject.Singleton;
 import lombok.extern.log4j.Log4j2;
 
 /**
- * Redis-based cache for portfolio entities.
+ * Redis-based cache for portfolio DTOs.
  * Provides fast access to portfolio data with automatic expiration (1 hour TTL).
+ * Stores lightweight DTOs instead of full entities to reduce cache size.
  */
 @Singleton
 @Log4j2
@@ -20,31 +23,36 @@ public class PortfolioCacheSource implements PortfolioSource {
 
     private final RedisCommands<String, String> redis;
     private final ObjectMapper objectMapper;
+    private final PortfolioMapper portfolioMapper;
 
     public PortfolioCacheSource(@Named("mainRedis") final RedisCommands<String, String> redis,
-            final ObjectMapper objectMapper) {
+            final ObjectMapper objectMapper, final PortfolioMapper portfolioMapper) {
         this.redis = redis;
         this.objectMapper = objectMapper;
+        this.portfolioMapper = portfolioMapper;
     }
 
     /**
-     * Retrieves a portfolio from cache.
+     * Retrieves a portfolio from cache and converts it to entity.
      *
      * @param portfolioId the portfolio identifier
      * @return the portfolio entity or null if not found or error occurs
      */
     @Override
     public PortfolioEntity get(final Long portfolioId) {
-        return getFromRedis(portfolioId, PortfolioEntity.class);
+        final PortfolioDto dto = getFromRedis(portfolioId, PortfolioDto.class);
+        return portfolioMapper.toEntity(dto);
     }
 
     /**
      * Stores a portfolio in cache with TTL of 1 hour.
+     * Converts entity to DTO before storing.
      *
      * @param portfolio the portfolio entity to cache
      */
     public void put(final PortfolioEntity portfolio) {
-        putToRedis(portfolio.getId(), portfolio);
+        final PortfolioDto dto = portfolioMapper.toDto(portfolio);
+        putToRedis(portfolio.getId(), dto);
     }
 
     private <T> T getFromRedis(final Long key, Class<T> clazz) {

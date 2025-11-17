@@ -7,9 +7,9 @@ micronaut:
 
 datasources:
   default:
-    url: jdbc:postgresql://ep-royal-star-ahw87sxu-pooler.c-3.us-east-1.aws.neon.tech/found?sslmode=require&channelBinding=require
-    username: XXXXXXX
-    password: XXXXXXX
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driverClassName: org.postgresql.Driver
     maximumPoolSize: 10  # max równoczesnych połączeń z puli
     minimumIdle: 2
