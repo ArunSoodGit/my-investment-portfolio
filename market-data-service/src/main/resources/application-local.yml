@@ -11,11 +11,19 @@ grpc:
 redis:
   uri: redis://localhost:6379
 
+kafka:
+  bootstrap:
+    servers: "localhost:9092"
+
+twelvedata:
+  base-url: ${TWELVEDATA_BASE_URL:https://api.twelvedata.com}
+  apiKey: ${TWELVEDATA_API_KEY}
+
 datasources:
   default:
-    url: jdbc:postgresql://ep-royal-star-ahw87sxu-pooler.c-3.us-east-1.aws.neon.tech/found?sslmode=require&channelBinding=require
-    username: XXXXXXXXXX
-    password: XXXXXXXX
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driverClassName: org.postgresql.Driver
     maximumPoolSize: 10  # max równoczesnych połączeń z puli
     minimumIdle: 2

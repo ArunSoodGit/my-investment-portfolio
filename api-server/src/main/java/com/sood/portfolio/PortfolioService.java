@@ -1,6 +1,6 @@
 package com.sood.portfolio;
 
-import com.sood.portfolio.model.PortfolioDTO;
+import com.sood.portfolio.model.PortfolioResponseDTO;
 import io.reactivex.rxjava3.core.Flowable;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -15,8 +15,8 @@ public class PortfolioService {
         this.portfolioClient = portfolioClient;
     }
 
-    public Flowable<PortfolioDTO> streamPortfolio(final Long portfolioId) {
+    public Flowable<PortfolioResponseDTO> streamPortfolio(final Long portfolioId) {
         return portfolioClient.streamPortfolio(portfolioId)
-                .map(PortfolioDTO::fromProto);
+                .map(PortfolioResponseDTO::fromProto);
     }
 }

@@ -12,7 +12,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Builder
 @Serdeable
-public class PortfolioDTO {
+public class PortfolioResponseDTO {
 
     private final Long id;
     private final String userId;
@@ -23,12 +23,12 @@ public class PortfolioDTO {
     private final String totalProfitPercentage;
     private final List<PortfolioItemDTO> items;
 
-    public static PortfolioDTO fromProto(final PortfolioResponse proto) {
+    public static PortfolioResponseDTO fromProto(final PortfolioResponse proto) {
         final List<PortfolioItemDTO> items = proto.getItemsList().stream()
                 .map(PortfolioItemDTO::fromProto)
                 .toList();
 
-        return PortfolioDTO.builder()
+        return PortfolioResponseDTO.builder()
                 .id(proto.getPortfolioId())
                 .userId(proto.getUserId())
                 .portfolioName(proto.getPortfolioName())

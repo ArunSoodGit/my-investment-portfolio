@@ -23,10 +23,11 @@ public class MarketDataService {
     private final MarketDataRepository repository;
     private final TwelveDataClient twelveDataClient;
     private final String authHeader;
+
     private final ObjectMapper objectMapper;
 
     public MarketDataService(final MarketDataCacheManager cache, final MarketDataRepository repository,
-            final TwelveDataClient twelveDataClient, @Value("${finnhub.token}") final String authHeader,
+            final TwelveDataClient twelveDataClient, @Value("${twelvedata.apiKey}") final String authHeader,
             final ObjectMapper objectMapper) {
         this.cache = cache;
         this.repository = repository;

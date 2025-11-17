@@ -2,7 +2,7 @@ package com.sood.portfolio;
 
 import com.sood.portfolio.history.PortfolioHistoryDTO;
 import com.sood.portfolio.history.PortfolioHistoryService;
-import com.sood.portfolio.model.PortfolioDTO;
+import com.sood.portfolio.model.PortfolioResponseDTO;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
@@ -26,7 +26,7 @@ public class PortfolioController {
 
     @Get("/{portfolioId}")
     @Produces(MediaType.TEXT_EVENT_STREAM)
-    public Flowable<PortfolioDTO> streamPortfolio(@PathVariable final Long portfolioId) {
+    public Flowable<PortfolioResponseDTO> streamPortfolio(@PathVariable final Long portfolioId) {
         return portfolioService.streamPortfolio(portfolioId);
     }
 

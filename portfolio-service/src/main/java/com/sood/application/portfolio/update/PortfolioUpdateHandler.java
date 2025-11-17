@@ -1,9 +1,11 @@
 package com.sood.application.portfolio.update;
 
+import com.sood.application.portfolio.PortfolioEventPublisher;
 import com.sood.infrastructure.entity.PortfolioEntity;
 import com.sood.infrastructure.service.PortfolioService;
 import io.micronaut.transaction.annotation.Transactional;
 import jakarta.inject.Singleton;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import sood.found.TransactionCreatedEvent;
 
@@ -36,5 +38,11 @@ public class PortfolioUpdateHandler {
         final PortfolioEntity portfolio = portfolioService.getPortfolio(portfolioId);
         final PortfolioUpdateStrategy strategy = portfolioUpdateStrategyFactory.getStrategy(portfolio, event);
         strategy.update(portfolio, event);
+    }
+
+    @Transactional
+    public void handle() {
+        final List<PortfolioEntity> portfolios = portfolioService.findAll();
+        portfolios.forEach(PortfolioEventPublisher::emit);
     }
 }

@@ -10,14 +10,14 @@ grpc:
     port: 50052       # port, na którym działa gRPC
 
 twelvedata:
-  base-url: https://api.twelvedata.com
-  apikey: ce7d183bf8314c059f7117d2ff75a8a4
+  base-url: ${TWELVEDATA_BASE_URL:https://api.twelvedata.com}
+  apiKey: ${TWELVEDATA_API_KEY}
 
 datasources:
   default:
-    url: jdbc:postgresql://ep-royal-star-ahw87sxu-pooler.c-3.us-east-1.aws.neon.tech/found?sslmode=require&channelBinding=require
-    username: XXXXXXXX
-    password: XXXXXXXXXX
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driverClassName: org.postgresql.Driver
     maximumPoolSize: 10  # max równoczesnych połączeń z puli
     minimumIdle: 2

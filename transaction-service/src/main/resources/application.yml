@@ -7,9 +7,9 @@ micronaut:
 
 datasources:
   default:
-    url: jdbc:postgresql://ep-royal-star-ahw87sxu-pooler.c-3.us-east-1.aws.neon.tech/found?sslmode=require
-    username: XXXXXX
-    password: XXXXXX
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driverClassName: org.postgresql.Driver
 
 jpa:
@@ -25,5 +25,5 @@ grpc:
     port: 50054       # port, na którym działa gRPC
 
 twelvedata:
-  base-url: https://api.twelvedata.com
-  apikey: XXXXXXXXXXXX
+  base-url: ${TWELVEDATA_BASE_URL:https://api.twelvedata.com}
+  apikey: ${TWELVEDATA_API_KEY}

@@ -29,7 +29,7 @@ public class MarketDataUpdater {
     private final String authHeader;
 
     public MarketDataUpdater(final TwelveDataClient twelveDataClient, final MarketDataCacheManager cache,
-            final ObjectMapper objectMapper, final @Value("${finnhub.token}") String authHeader) {
+            final ObjectMapper objectMapper, final @Value("${twelvedata.apiKey}") String authHeader) {
         this.twelveDataClient = twelveDataClient;
         this.cache = cache;
         this.objectMapper = objectMapper;
