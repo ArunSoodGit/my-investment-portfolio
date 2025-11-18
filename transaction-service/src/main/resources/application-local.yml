@@ -33,5 +33,5 @@ grpc:
       plaintext: true
 
 twelvedata:
-  base-url: ${TWELVEDATA_BASE_URL:https://api.twelvedata.com}
+  base-url: https://api.twelvedata.com
   apikey: ${TWELVEDATA_API_KEY}

@@ -19,11 +19,13 @@ public class PortfolioUpdateHandler {
 
     private final PortfolioService portfolioService;
     private final PortfolioUpdateStrategyFactory portfolioUpdateStrategyFactory;
+    private final PortfolioEventPublisher eventPublisher;
 
     public PortfolioUpdateHandler(final PortfolioService portfolioService,
-            final PortfolioUpdateStrategyFactory updateStrategyFactory) {
+            final PortfolioUpdateStrategyFactory updateStrategyFactory, final PortfolioEventPublisher eventPublisher) {
         this.portfolioService = portfolioService;
         this.portfolioUpdateStrategyFactory = updateStrategyFactory;
+        this.eventPublisher = eventPublisher;
     }
 
     /**
@@ -43,6 +45,6 @@ public class PortfolioUpdateHandler {
     @Transactional
     public void handle() {
         final List<PortfolioEntity> portfolios = portfolioService.findAll();
-        portfolios.forEach(PortfolioEventPublisher::emit);
+        portfolios.forEach(eventPublisher::emit);
     }
 }

@@ -22,12 +22,14 @@ public class NewItemPortfolioUpdateStrategy implements PortfolioUpdateStrategy {
     private final PortfolioItemFactory itemFactory;
     private final PortfolioRepository repository;
     private final PortfolioCacheSource cacheManager;
+    private final PortfolioEventPublisher eventPublisher;
 
     public NewItemPortfolioUpdateStrategy(final PortfolioItemFactory itemFactory, final PortfolioRepository repository,
-            final PortfolioCacheSource cacheManager) {
+            final PortfolioCacheSource cacheManager, final PortfolioEventPublisher eventPublisher) {
         this.itemFactory = itemFactory;
         this.repository = repository;
         this.cacheManager = cacheManager;
+        this.eventPublisher = eventPublisher;
     }
 
     /**
@@ -52,7 +54,7 @@ public class NewItemPortfolioUpdateStrategy implements PortfolioUpdateStrategy {
         }
         repository.update(portfolio);
         cacheManager.put(portfolio);
-        PortfolioEventPublisher.emit(portfolio);
+        eventPublisher.emit(portfolio);
     }
 
     private boolean isBuyTransaction(final TransactionCreatedEvent event) {

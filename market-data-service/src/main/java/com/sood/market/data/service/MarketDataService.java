@@ -1,97 +1,97 @@
 package com.sood.market.data.service;
 
 import com.example.market.grpc.MarketDataResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sood.market.data.client.TwelveDataClient;
-import com.sood.market.data.infrastructure.MarketDataRepository;
-import com.sood.market.data.infrastructure.entity.MarketDataEntity;
-import com.sood.market.data.model.TwelveDataResponse;
-import com.sood.market.data.scheduler.MarketDataCacheManager;
-import io.micronaut.context.annotation.Value;
+import com.sood.market.data.cache.MarketDataCacheManager;
 import io.reactivex.rxjava3.core.Single;
 import jakarta.inject.Singleton;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.time.LocalDateTime;
-import java.util.Objects;
-import java.util.Set;
+import lombok.extern.log4j.Log4j2;
 
+/**
+ * Main service for retrieving market data.
+ * Follows Single Responsibility Principle and Dependency Inversion Principle.
+ * Coordinates between cache, API, and persistence layers.
+ */
 @Singleton
+@Log4j2
 public class MarketDataService {
 
     private final MarketDataCacheManager cache;
-    private final MarketDataRepository repository;
-    private final TwelveDataClient twelveDataClient;
-    private final String authHeader;
+    private final MarketDataApiClient apiClient;
+    private final MarketDataPersistenceService persistenceService;
 
-    private final ObjectMapper objectMapper;
-
-    public MarketDataService(final MarketDataCacheManager cache, final MarketDataRepository repository,
-            final TwelveDataClient twelveDataClient, @Value("${twelvedata.apiKey}") final String authHeader,
-            final ObjectMapper objectMapper) {
+    public MarketDataService(final MarketDataCacheManager cache, final MarketDataApiClient apiClient,
+            final MarketDataPersistenceService persistenceService) {
         this.cache = cache;
-        this.repository = repository;
-        this.twelveDataClient = twelveDataClient;
-        this.authHeader = authHeader;
-        this.objectMapper = objectMapper;
+        this.apiClient = apiClient;
+        this.persistenceService = persistenceService;
     }
 
-    public void refreshMarketData() {
-        repository.deleteAll();
-        final Set<String> symbols = cache.getAllSymbols().blockingGet();
-        symbols.stream()
-                .map(symbol -> cache.get(symbol).blockingGet())
-                .filter(Objects::nonNull)
-                .forEach(data -> {
-                    try {
-                        final MarketDataEntity entity = new MarketDataEntity();
-                        entity.setCompanyName(data.getCompanyName());
-                        entity.setSymbol(data.getSymbol());
-                        entity.setExchange(data.getExchange());
-                        entity.setCurrentPrice(data.getPrice());
-                        entity.setPercentageChange(data.getPercentageChange());
-                        entity.setCreatedAt(LocalDateTime.now().withNano(0).withSecond(0));
-                        repository.save(entity);
-                    } catch (Exception e) {
-                    }
-                });
-    }
-
+    /**
+     * Retrieves market data for a given symbol.
+     * Uses cache-aside pattern: tries cache first, then fetches from API if not found.
+     *
+     * @param symbol the stock symbol (e.g., "AAPL", "GOOGL")
+     * @return Single emitting MarketDataResponse
+     */
     public Single<MarketDataResponse> getMarketData(final String symbol) {
+        log.debug("Retrieving market data for symbol: {}", symbol);
+
         return cache.get(symbol)
-                .switchIfEmpty(fetchFromAPI(symbol));
+                .switchIfEmpty(fetchAndCacheFromApi(symbol))
+                .doOnSuccess(data -> log.debug("Retrieved market data for {}: price={}",
+                        symbol, data.getPrice()))
+                .doOnError(error -> log.error("Failed to retrieve market data for symbol: {}",
+                        symbol, error));
     }
 
-    private Single<MarketDataResponse> fetchFromAPI(final String symbol) {
-        return twelveDataClient.getResponse(authHeader, symbol)
-                .flatMap(json -> {
-                    try {
-                        final TwelveDataResponse response = objectMapper.readValue(json, TwelveDataResponse.class);
-                        final MarketDataResponse grpcResponse = mapToGrpc(response);
-
-                        return cache.put(symbol, grpcResponse)
-                                .andThen(cache.putSymbol(symbol))
-                                .andThen(Single.just(grpcResponse));
-                    } catch (Exception e) {
-                        return Single.error(e);
-                    }
-                })
-                // Fallback do cache przy błędzie API
-                .onErrorResumeNext(error -> cache.get(symbol)
-                        .switchIfEmpty(Single.error(new RuntimeException(
-                                "Brak danych w cache i błąd przy pobieraniu z API dla: " + symbol, error
-                        ))));
+    /**
+     * Refreshes all market data in the database from cache.
+     * This is typically called by a scheduler to persist cached data.
+     */
+    public void refreshMarketDataInDatabase() {
+        log.info("Starting market data database refresh");
+        persistenceService.refreshDatabaseFromCache();
+        log.info("Market data database refresh completed");
     }
 
-    private MarketDataResponse mapToGrpc(final TwelveDataResponse response) {
-        return MarketDataResponse.newBuilder()
-                .setPrice(response.getClose())
-                .setPercentageChange(new BigDecimal(response.getPercent_change())
-                        .setScale(2, RoundingMode.HALF_UP)
-                        .toString())
-                .setSymbol(response.getSymbol())
-                .setCompanyName(response.getName())
-                .setExchange(response.getExchange())
-                .build();
+    /**
+     * Fetches market data from API and caches the result.
+     *
+     * @param symbol the stock symbol
+     * @return Single emitting MarketDataResponse
+     */
+    private Single<MarketDataResponse> fetchAndCacheFromApi(final String symbol) {
+        return apiClient.fetchMarketData(symbol)
+                .flatMap(marketData -> persistenceService.cacheMarketData(symbol, marketData)
+                        .andThen(Single.just(marketData)))
+                .onErrorResumeNext(error -> handleApiFetchError(symbol, error));
+    }
+
+    /**
+     * Handles errors when fetching from API.
+     * Attempts to fall back to cached data if available.
+     *
+     * @param symbol the stock symbol
+     * @param error  the error that occurred
+     * @return Single with fallback data or error
+     */
+    private Single<MarketDataResponse> handleApiFetchError(final String symbol, final Throwable error) {
+        log.warn("API fetch failed for symbol {}, attempting cache fallback: {}",
+                symbol, error.getMessage());
+
+        return cache.get(symbol)
+                .switchIfEmpty(Single.error(
+                        new MarketDataNotFoundException(
+                                "Market data not available in cache or API for symbol: " + symbol,
+                                error)));
+    }
+
+    /**
+     * Exception thrown when market data cannot be found.
+     */
+    public static class MarketDataNotFoundException extends RuntimeException {
+        public MarketDataNotFoundException(final String message, final Throwable cause) {
+            super(message, cause);
+        }
     }
 }

@@ -22,8 +22,8 @@ class PortfolioUpdateStrategyFactoryTest {
 
     @BeforeEach
     void setUp() {
-        existingItemStrategy = new ExistingItemPortfolioUpdateStrategy(null, null, null);
-        newItemStrategy = new NewItemPortfolioUpdateStrategy(null, null, null);
+        existingItemStrategy = new ExistingItemPortfolioUpdateStrategy(null, null, null, null);
+        newItemStrategy = new NewItemPortfolioUpdateStrategy(null, null, null,null);
         factory = new PortfolioUpdateStrategyFactory(existingItemStrategy, newItemStrategy);
     }
 

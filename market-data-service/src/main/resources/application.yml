@@ -10,7 +10,7 @@ grpc:
     port: 50052       # port, na którym działa gRPC
 
 twelvedata:
-  base-url: ${TWELVEDATA_BASE_URL:https://api.twelvedata.com}
+  base-url: https://api.twelvedata.com
   apiKey: ${TWELVEDATA_API_KEY}
 
 datasources:
@@ -31,3 +31,25 @@ jpa:
       hibernate:
         hbm2ddl:
           auto: update
+
+# Scheduler configuration
+scheduler:
+  market-refresh:
+    interval: 25m  # How often to run the refresh scheduler
+
+# API rate limiting configuration
+api:
+  rate-limit:
+    max-per-minute: 8  # Maximum API requests per minute (TwelveData free tier)
+
+# Market session configuration
+market:
+  session:
+    timezone: America/New_York  # NYSE timezone
+    open-time: "09:30"          # Market opens at 9:30 AM ET
+    close-time: "16:00"         # Market closes at 4:00 PM ET
+
+# Cache configuration
+cache:
+  market-data:
+    ttl-seconds: 3600  # Cache TTL: 1 hour
