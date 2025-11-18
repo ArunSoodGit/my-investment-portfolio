@@ -49,7 +49,7 @@ public class MarketDataUpdater {
                             return Observable.empty();
                         })
                 )
-                .ignoreElements(); // Zamienia Observable<?> na Completable
+                .ignoreElements();
     }
 
     private Single<MarketDataResponse> fetchAndCache(final String symbol) {
@@ -58,8 +58,7 @@ public class MarketDataUpdater {
                     try {
                         final TwelveDataResponse response = objectMapper.readValue(json, TwelveDataResponse.class);
                         final MarketDataResponse grpcResponse = mapToGrpc(response);
-                        return cache.put(symbol, grpcResponse)
-                                .toSingleDefault(grpcResponse);
+                        return cache.put(symbol, grpcResponse).toSingleDefault(grpcResponse);
                     } catch (Exception e) {
                         return Single.error(e);
                     }

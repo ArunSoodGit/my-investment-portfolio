@@ -10,7 +10,7 @@ grpc:
     port: 50052       # port, na którym działa gRPC
 
 twelvedata:
-  base-url: ${TWELVEDATA_BASE_URL:https://api.twelvedata.com}
+  base-url: https://api.twelvedata.com
   apiKey: ${TWELVEDATA_API_KEY}
 
 datasources:

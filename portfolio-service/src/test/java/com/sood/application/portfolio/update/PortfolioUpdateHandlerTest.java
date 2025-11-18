@@ -1,5 +1,6 @@
 package com.sood.application.portfolio.update;
 
+import com.sood.application.portfolio.PortfolioEventPublisher;
 import com.sood.infrastructure.entity.PortfolioEntity;
 import com.sood.infrastructure.service.PortfolioService;
 import java.math.BigDecimal;
@@ -28,6 +29,9 @@ class PortfolioUpdateHandlerTest {
     private PortfolioUpdateStrategyFactory strategyFactory;
 
     @Mock
+    private PortfolioEventPublisher eventPublisher;
+
+    @Mock
     private PortfolioUpdateStrategy strategy;
 
     private PortfolioUpdateHandler handler;
@@ -35,7 +39,7 @@ class PortfolioUpdateHandlerTest {
 
     @BeforeEach
     void setUp() {
-        handler = new PortfolioUpdateHandler(portfolioService, strategyFactory);
+        handler = new PortfolioUpdateHandler(portfolioService, strategyFactory, eventPublisher);
     }
 
     @Test

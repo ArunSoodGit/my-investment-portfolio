@@ -17,10 +17,13 @@ public class PortfolioStreamer {
 
     private final PortfolioProcessor processor;
     private final PortfolioProvider provider;
+    private final PortfolioEventPublisher eventPublisher;
 
-    public PortfolioStreamer(final PortfolioProcessor processor, final PortfolioProvider provider) {
+    public PortfolioStreamer(final PortfolioProcessor processor, final PortfolioProvider provider,
+            final PortfolioEventPublisher eventPublisher) {
         this.processor = processor;
         this.provider = provider;
+        this.eventPublisher = eventPublisher;
     }
 
     /**
@@ -33,7 +36,7 @@ public class PortfolioStreamer {
     public Observable<PortfolioResponse> getPortfolioStream(final Long portfolioId) {
         final PortfolioEntity portfolio = provider.provide(portfolioId);
 
-        return PortfolioEventPublisher.getObservable(portfolio.getId())
+        return eventPublisher.getObservable(portfolio.getId())
                 .startWithItem(portfolio)
                 .flatMapSingle(processor::process)
                 .doOnError(error -> log.error("Error in portfolio stream: {}", error.getMessage(), error))

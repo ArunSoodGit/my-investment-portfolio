@@ -28,7 +28,7 @@ public class MarketDataController extends MarketDataServiceGrpc.MarketDataServic
                 .subscribe(
                         response -> {
                             responseObserver.onNext(response);
-                            responseObserver.onCompleted(); // <--- konieczne!
+                            responseObserver.onCompleted();
                         },
                         error -> handleError(symbol, error, responseObserver)
                 );

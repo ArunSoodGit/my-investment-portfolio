@@ -15,8 +15,10 @@ import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
+import lombok.extern.log4j.Log4j2;
 
 @Singleton
+@Log4j2
 public class MarketDataService {
 
     private final MarketDataCacheManager cache;
@@ -64,23 +66,35 @@ public class MarketDataService {
 
     private Single<MarketDataResponse> fetchFromAPI(final String symbol) {
         return twelveDataClient.getResponse(authHeader, symbol)
+                // Debug: pokaż, że subskrypcja ruszyła
+                .doOnSubscribe(d -> log.info("Rozpoczynam pobieranie danych dla {}", symbol))
+
                 .flatMap(json -> {
                     try {
+                        // mapowanie JSON -> obiekt domenowy
                         final TwelveDataResponse response = objectMapper.readValue(json, TwelveDataResponse.class);
                         final MarketDataResponse grpcResponse = mapToGrpc(response);
 
+                        // zapis do cache w sposób reaktywny
                         return cache.put(symbol, grpcResponse)
                                 .andThen(cache.putSymbol(symbol))
                                 .andThen(Single.just(grpcResponse));
+
                     } catch (Exception e) {
-                        return Single.error(e);
+                        return Single.error(new RuntimeException("Błąd mapowania danych z API", e));
                     }
                 })
-                // Fallback do cache przy błędzie API
-                .onErrorResumeNext(error -> cache.get(symbol)
-                        .switchIfEmpty(Single.error(new RuntimeException(
-                                "Brak danych w cache i błąd przy pobieraniu z API dla: " + symbol, error
-                        ))));
+                // fallback: pobierz z cache w razie błędu API
+                .onErrorResumeNext(error -> {
+                    log.warn("Błąd pobierania z API dla {}: {}", symbol, error.getMessage());
+                    return cache.get(symbol)
+                            .switchIfEmpty(Single.error(new RuntimeException(
+                                    "Brak danych w cache i błąd przy pobieraniu z API dla: " + symbol, error
+                            )));
+                })
+                // debug: pokaz wynik
+                .doOnSuccess(r -> log.info("Dane dla {} pobrane: {}", symbol, r))
+                .doOnError(e -> log.error("Błąd pobierania danych dla {}: {}", symbol, e.getMessage(), e));
     }
 
     private MarketDataResponse mapToGrpc(final TwelveDataResponse response) {

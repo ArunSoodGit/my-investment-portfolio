@@ -16,7 +16,7 @@ kafka:
     servers: "localhost:9092"
 
 twelvedata:
-  base-url: ${TWELVEDATA_BASE_URL:https://api.twelvedata.com}
+  base-url: https://api.twelvedata.com
   apiKey: ${TWELVEDATA_API_KEY}
 
 datasources:
