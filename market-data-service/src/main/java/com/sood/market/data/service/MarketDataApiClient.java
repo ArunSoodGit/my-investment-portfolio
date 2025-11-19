@@ -9,6 +9,7 @@ import io.micronaut.context.annotation.Value;
 import io.reactivex.rxjava3.core.Single;
 import jakarta.inject.Singleton;
 import lombok.extern.log4j.Log4j2;
+import com.sood.market.data.exception.MarketDataApiException;
 
 /**
  * Client for fetching market data from external API.
