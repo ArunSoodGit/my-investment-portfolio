@@ -3,6 +3,7 @@ package com.sood.market.data.cache;
 import com.example.market.grpc.MarketDataResponse;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
+import com.sood.market.data.exception.CacheSerializationException;
 import jakarta.inject.Singleton;
 import lombok.extern.log4j.Log4j2;
 
@@ -59,17 +60,7 @@ public class MarketDataSerializer {
             parser.merge(json, builder);
             return builder.build();
         } catch (InvalidProtocolBufferException e) {
-            throw new CacheSerializationException(
-                    "Failed to deserialize market data from JSON", e);
-        }
-    }
-
-    /**
-     * Custom exception for serialization errors.
-     */
-    public static class CacheSerializationException extends RuntimeException {
-        public CacheSerializationException(final String message, final Throwable cause) {
-            super(message, cause);
+            throw new CacheSerializationException("Failed to deserialize market data from JSON", e);
         }
     }
 }
