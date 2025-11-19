@@ -20,12 +20,15 @@ public class PortfolioUpdateHandler {
     private final PortfolioService portfolioService;
     private final PortfolioUpdateStrategyFactory portfolioUpdateStrategyFactory;
     private final PortfolioEventPublisher eventPublisher;
+    private final PortfolioPersistenceService persistenceService;
 
     public PortfolioUpdateHandler(final PortfolioService portfolioService,
-            final PortfolioUpdateStrategyFactory updateStrategyFactory, final PortfolioEventPublisher eventPublisher) {
+            final PortfolioUpdateStrategyFactory updateStrategyFactory, final PortfolioEventPublisher eventPublisher,
+            final PortfolioPersistenceService persistenceService) {
         this.portfolioService = portfolioService;
         this.portfolioUpdateStrategyFactory = updateStrategyFactory;
         this.eventPublisher = eventPublisher;
+        this.persistenceService = persistenceService;
     }
 
     /**
@@ -36,10 +39,10 @@ public class PortfolioUpdateHandler {
      */
     @Transactional
     public void handle(final TransactionCreatedEvent event) {
-        final Long portfolioId = event.portfolioId();
-        final PortfolioEntity portfolio = portfolioService.getPortfolio(portfolioId);
+        final PortfolioEntity portfolio = portfolioService.getPortfolio(event.portfolioId());
         final PortfolioUpdateStrategy strategy = portfolioUpdateStrategyFactory.getStrategy(portfolio, event);
         strategy.update(portfolio, event);
+        persistenceService.persist(portfolio);
     }
 
     @Transactional

@@ -4,7 +4,6 @@ import com.sood.application.portfolio.PortfolioEventPublisher;
 import com.sood.application.portfolio.item.PortfolioItemFactory;
 import com.sood.application.portfolio.provider.PortfolioCacheSource;
 import com.sood.infrastructure.entity.PortfolioEntity;
-import com.sood.infrastructure.entity.PortfolioItemEntity;
 import com.sood.infrastructure.repository.PortfolioRepository;
 import jakarta.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -37,31 +36,17 @@ public class ExistingItemPortfolioUpdateStrategy implements PortfolioUpdateStrat
      * Persists changes to database, cache, and emits event for subscribers.
      *
      * @param portfolio the portfolio entity
-     * @param event the transaction event
+     * @param event     the transaction event
      */
     @Override
-    public void update(final PortfolioEntity portfolio, final TransactionCreatedEvent event) {
-        final String symbol = event.symbol();
-        final Long portfolioId = portfolio.getId();
-        final PortfolioItemEntity existing = findPortfolioItem(event, portfolio);
-        final PortfolioItemEntity updated = itemFactory.updateItem(event, existing);
+    public void update(PortfolioEntity portfolio, TransactionCreatedEvent event) {
+        var item = portfolio.findItemBySymbol(event.symbol());
+        var updated = itemFactory.updateItem(event, item);
 
         if (updated.getQuantity() <= 0) {
             portfolio.removeItem(updated);
-            log.info("Position closed and removed for symbol {} (portfolioId {})", symbol, portfolioId);
         } else {
             portfolio.addItem(updated);
-            log.info("Position updated for symbol {} (portfolioId {}) - new qty: {}", symbol, portfolioId, updated.getQuantity());
         }
-        repository.update(portfolio);
-        cacheManager.put(portfolio);
-        eventPublisher.emit(portfolio);
-    }
-
-    private PortfolioItemEntity findPortfolioItem(final TransactionCreatedEvent event, final PortfolioEntity portfolio) {
-        return portfolio.getItems().stream()
-                .filter(item -> item.getSymbol().equals(event.symbol()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Portfolio item not found for symbol: " + event.symbol()));
     }
 }
