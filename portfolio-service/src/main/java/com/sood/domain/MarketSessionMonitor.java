@@ -1,4 +1,4 @@
-package com.sood;
+package com.sood.domain;
 
 import jakarta.inject.Singleton;
 import java.time.LocalTime;

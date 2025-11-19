@@ -36,7 +36,7 @@ public class PortfolioEventListener {
     }
 
     @Topic("updated-data")
-    public void receive(String msg) {
+    public void receive(final String msg) {
         try {
             portfolioUpdateHandler.handle();
         } catch (Exception e) {

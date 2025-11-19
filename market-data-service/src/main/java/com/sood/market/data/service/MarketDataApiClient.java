@@ -9,7 +9,6 @@ import io.micronaut.context.annotation.Value;
 import io.reactivex.rxjava3.core.Single;
 import jakarta.inject.Singleton;
 import lombok.extern.log4j.Log4j2;
-import com.sood.market.data.exception.MarketDataApiException;
 
 /**
  * Client for fetching market data from external API.
@@ -38,7 +37,7 @@ public class MarketDataApiClient {
      * @return Single emitting MarketDataResponse
      */
     public Single<MarketDataResponse> fetchMarketData(final String symbol) {
-        return twelveDataClient.getResponse(apiKey, symbol)
+        return twelveDataClient.getData(apiKey, symbol)
                 .flatMap(jsonResponse -> mapResponse(symbol, jsonResponse))
                 .doOnError(error -> log.error("Failed to fetch data from API for symbol: {}", symbol, error));
     }

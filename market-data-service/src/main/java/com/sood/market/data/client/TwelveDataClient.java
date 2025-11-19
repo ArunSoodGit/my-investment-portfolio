@@ -9,7 +9,7 @@ import io.reactivex.rxjava3.core.Single;
 public interface TwelveDataClient {
 
     @Get("/quote")
-    Single<String> getResponse(
+    Single<String> getData(
             @QueryValue("apikey") String apiKey,
             @QueryValue("symbol") String symbol
     );
