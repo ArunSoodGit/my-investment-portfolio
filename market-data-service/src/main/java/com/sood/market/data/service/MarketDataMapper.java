@@ -4,7 +4,6 @@ import com.example.market.grpc.MarketDataResponse;
 import com.sood.market.data.infrastructure.entity.MarketDataEntity;
 import com.sood.market.data.model.TwelveDataResponse;
 import jakarta.inject.Singleton;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
@@ -12,7 +11,6 @@ import java.time.temporal.ChronoUnit;
 
 /**
  * Maps market data between different representations (API, gRPC, Entity).
- * Follows Single Responsibility Principle - only handles data transformation.
  */
 @Singleton
 public class MarketDataMapper {
@@ -53,24 +51,12 @@ public class MarketDataMapper {
         return entity;
     }
 
-    /**
-     * Formats percentage change to 2 decimal places.
-     *
-     * @param percentageChange raw percentage value
-     * @return formatted percentage as string
-     */
     private String formatPercentageChange(final String percentageChange) {
         return new BigDecimal(percentageChange)
                 .setScale(PERCENTAGE_SCALE, PERCENTAGE_ROUNDING)
                 .toString();
     }
 
-    /**
-     * Truncates timestamp to minute precision for consistent querying.
-     *
-     * @param timestamp the original timestamp
-     * @return timestamp truncated to minutes
-     */
     private LocalDateTime truncateToMinutes(final LocalDateTime timestamp) {
         return timestamp.truncatedTo(ChronoUnit.MINUTES);
     }

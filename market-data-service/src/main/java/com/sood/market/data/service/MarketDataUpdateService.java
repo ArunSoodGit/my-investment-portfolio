@@ -28,11 +28,8 @@ public class MarketDataUpdateService {
     private final UpdateDataEventPublisher eventPublisher;
     private final RateLimiter rateLimiter;
 
-    public MarketDataUpdateService(
-            final MarketDataApiClient apiClient,
-            final MarketDataCacheManager cacheManager,
-            final MarketDataPersistenceService persistenceService,
-            final UpdateDataEventPublisher eventPublisher,
+    public MarketDataUpdateService(final MarketDataApiClient apiClient, final MarketDataCacheManager cacheManager,
+            final MarketDataPersistenceService persistenceService, final UpdateDataEventPublisher eventPublisher,
             final RateLimiter rateLimiter) {
         this.apiClient = apiClient;
         this.cacheManager = cacheManager;

@@ -1,6 +1,8 @@
 package com.sood.market.data.cache;
 
 import com.example.market.grpc.MarketDataResponse;
+import com.sood.market.data.exception.CacheOperationException;
+import com.sood.market.data.exception.CacheSerializationException;
 import io.lettuce.core.api.sync.RedisCommands;
 import io.micronaut.context.annotation.Value;
 import io.reactivex.rxjava3.core.Completable;
@@ -40,7 +42,7 @@ public class MarketDataCacheManager {
                 redis.setex(key, ttlSeconds, json);
 
                 log.debug("Cached market data for symbol: {} (TTL: {}s)", symbol, ttlSeconds);
-            } catch (MarketDataSerializer.CacheSerializationException e) {
+            } catch (CacheSerializationException e) {
                 log.error("Serialization error while caching data for symbol: {}", symbol, e);
                 throw new CacheOperationException("Failed to serialize market data for: " + symbol, e);
             } catch (Exception e) {
@@ -66,7 +68,7 @@ public class MarketDataCacheManager {
                 log.debug("Cache hit for symbol: {}", symbol);
                 return serializer.deserialize(value);
 
-            } catch (MarketDataSerializer.CacheSerializationException e) {
+            } catch (CacheSerializationException e) {
                 log.error("Deserialization error for symbol: {}, returning empty", symbol, e);
                 return null;
             } catch (Exception e) {
@@ -116,12 +118,6 @@ public class MarketDataCacheManager {
         validateSymbol(symbol);
         if (data == null) {
             throw new IllegalArgumentException("MarketDataResponse cannot be null");
-        }
-    }
-
-    public static class CacheOperationException extends RuntimeException {
-        public CacheOperationException(final String message, final Throwable cause) {
-            super(message, cause);
         }
     }
 }

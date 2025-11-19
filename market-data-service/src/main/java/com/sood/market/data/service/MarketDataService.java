@@ -2,6 +2,7 @@ package com.sood.market.data.service;
 
 import com.example.market.grpc.MarketDataResponse;
 import com.sood.market.data.cache.MarketDataCacheManager;
+import com.sood.market.data.exception.MarketDataNotFoundException;
 import io.reactivex.rxjava3.core.Single;
 import jakarta.inject.Singleton;
 import lombok.extern.log4j.Log4j2;
@@ -38,8 +39,6 @@ public class MarketDataService {
 
         return cache.get(symbol)
                 .switchIfEmpty(fetchAndCacheFromApi(symbol))
-                .doOnSuccess(data -> log.debug("Retrieved market data for {}: price={}",
-                        symbol, data.getPrice()))
                 .doOnError(error -> log.error("Failed to retrieve market data for symbol: {}",
                         symbol, error));
     }
@@ -84,14 +83,5 @@ public class MarketDataService {
                         new MarketDataNotFoundException(
                                 "Market data not available in cache or API for symbol: " + symbol,
                                 error)));
-    }
-
-    /**
-     * Exception thrown when market data cannot be found.
-     */
-    public static class MarketDataNotFoundException extends RuntimeException {
-        public MarketDataNotFoundException(final String message, final Throwable cause) {
-            super(message, cause);
-        }
     }
 }

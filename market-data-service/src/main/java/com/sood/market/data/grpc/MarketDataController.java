@@ -7,13 +7,9 @@ import com.sood.market.data.service.MarketDataService;
 import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import io.micronaut.grpc.annotation.GrpcService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @GrpcService
 public class MarketDataController extends MarketDataServiceGrpc.MarketDataServiceImplBase {
-
-    private static final Logger log = LoggerFactory.getLogger(MarketDataController.class);
 
     private final MarketDataService service;
 
@@ -35,12 +31,10 @@ public class MarketDataController extends MarketDataServiceGrpc.MarketDataServic
     }
 
     private void handleError(final String symbol, final Throwable error, final StreamObserver<MarketDataResponse> observer) {
-        log.error("Błąd podczas pobierania danych dla {}: {}", symbol, error.getMessage(), error);
-        observer.onError(
-                Status.INTERNAL
-                        .withDescription("Błąd podczas pobierania danych")
-                        .augmentDescription(error.getMessage())
-                        .asRuntimeException()
+        observer.onError(Status.INTERNAL
+                .withDescription("Błąd podczas pobierania danych")
+                .augmentDescription(error.getMessage())
+                .asRuntimeException()
         );
     }
 }
