@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import lombok.extern.log4j.Log4j2;
 
+import static com.sood.application.portfolio.util.PriceUtils.parsePrice;
+
 /**
  * Calculates portfolio-level financial metrics.
  * Aggregates data from individual portfolio items to compute total values and profit/loss.
@@ -45,16 +47,5 @@ public class PortfolioSummaryBuilder {
         final BigDecimal averagePurchasePrice = parsePrice(item.getAveragePurchasePrice());
         final double quantity = item.getQuantity();
         return CalculatorHelper.calculateTotalValue(averagePurchasePrice, quantity);
-    }
-
-    private BigDecimal parsePrice(final String price) {
-        if (price == null || price.isBlank()) {
-            return BigDecimal.ZERO;
-        }
-        try {
-            return new BigDecimal(price);
-        } catch (NumberFormatException e) {
-            return BigDecimal.ZERO;
-        }
     }
 }

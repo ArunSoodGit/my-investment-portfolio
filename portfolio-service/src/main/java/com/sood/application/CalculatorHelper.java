@@ -2,6 +2,7 @@ package com.sood.application;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import sood.found.TransactionCreatedEvent;
 
 /**
  * Utility class for financial calculations.
@@ -54,5 +55,9 @@ public final class CalculatorHelper {
         final BigDecimal percentage = profitValue.multiply(BigDecimal.valueOf(100))
                 .divide(investedValue, PERCENTAGE_SCALE, RoundingMode.HALF_UP);
         return String.format("%.2f%%", percentage);
+    }
+
+    public static BigDecimal calculateTransactionValue(final TransactionCreatedEvent event) {
+        return event.price().multiply(BigDecimal.valueOf(event.quantity()));
     }
 }

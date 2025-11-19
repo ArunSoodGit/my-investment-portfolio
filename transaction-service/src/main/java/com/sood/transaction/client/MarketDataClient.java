@@ -19,7 +19,7 @@ public class MarketDataClient {
     /**
      * Reaktywne pobranie danych giełdowych dla danego symbolu.
      */
-    public Single<MarketDataResponse> getStockDataReactive(final String symbol) {
+    public Single<MarketDataResponse> getMarketData(final String symbol) {
         final MarketDataRequest request = MarketDataRequest.newBuilder()
                 .setSymbol(symbol)
                 .build();

@@ -51,7 +51,7 @@ public class TransactionManager {
         final List<TransactionEntity> entities = service.findByPortfolioIdAndSymbol(
                 request.getPortfolioId(), symbol);
 
-        return client.getStockDataReactive(symbol)
+        return client.getMarketData(symbol)
                 .map(stockData -> builder.create(stockData, entities));
     }
 }

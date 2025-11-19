@@ -42,7 +42,7 @@ public class MarketDataCacheManager {
                 redis.setex(key, ttlSeconds, json);
 
                 log.debug("Cached market data for symbol: {} (TTL: {}s)", symbol, ttlSeconds);
-            } catch (CacheSerializationException e) {
+            } catch (final CacheSerializationException e) {
                 log.error("Serialization error while caching data for symbol: {}", symbol, e);
                 throw new CacheOperationException("Failed to serialize market data for: " + symbol, e);
             } catch (Exception e) {
@@ -68,10 +68,10 @@ public class MarketDataCacheManager {
                 log.debug("Cache hit for symbol: {}", symbol);
                 return serializer.deserialize(value);
 
-            } catch (CacheSerializationException e) {
+            } catch (final CacheSerializationException e) {
                 log.error("Deserialization error for symbol: {}, returning empty", symbol, e);
                 return null;
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 log.error("Redis error while reading cache for symbol: {}, returning empty", symbol, e);
                 return null;
             }
@@ -86,7 +86,7 @@ public class MarketDataCacheManager {
                 final String key = keyGenerator.getSymbolsSetKey();
                 redis.sadd(key, symbol.toUpperCase());
 
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 log.error("Failed to add symbol to tracked set: {}", symbol, e);
                 throw new CacheOperationException("Failed to track symbol: " + symbol, e);
             }

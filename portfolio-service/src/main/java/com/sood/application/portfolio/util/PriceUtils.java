@@ -19,9 +19,13 @@ public class PriceUtils {
      * @param price the price string to parse
      * @return parsed price or ZERO if invalid
      */
+
     public static BigDecimal parsePrice(final String price) {
+        if (price == null || price.isBlank()) {
+            return BigDecimal.ZERO;
+        }
         try {
-            return new BigDecimal(price).setScale(2, RoundingMode.HALF_UP);
+            return new BigDecimal(price);
         } catch (NumberFormatException e) {
             return BigDecimal.ZERO;
         }

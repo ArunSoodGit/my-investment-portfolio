@@ -27,7 +27,8 @@ public class PortfolioProvider {
      * @return the portfolio entity
      */
     public PortfolioEntity provide(final Long portfolioId) {
-        return Optional.ofNullable(cacheManager.get(portfolioId)).orElseGet(() -> fromDb(portfolioId));
+        return Optional.ofNullable(cacheManager.get(portfolioId))
+                .orElseGet(() -> fromDb(portfolioId));
     }
 
     private PortfolioEntity fromDb(final Long portfolioId) {
