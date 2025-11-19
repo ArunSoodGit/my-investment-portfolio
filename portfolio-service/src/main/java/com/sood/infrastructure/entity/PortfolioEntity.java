@@ -37,6 +37,13 @@ public class PortfolioEntity {
                 .findFirst();
     }
 
+    public PortfolioItemEntity findItemBySymbol(final String symbol) {
+        return items.stream()
+                .filter(i -> i.getSymbol().equals(symbol))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Item not found: " + symbol));
+    }
+
     public void addItem(final PortfolioItemEntity item) {
         item.setPortfolio(this);
         this.items.add(item);
