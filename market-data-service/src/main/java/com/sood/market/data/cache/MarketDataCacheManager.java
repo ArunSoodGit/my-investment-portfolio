@@ -82,13 +82,8 @@ public class MarketDataCacheManager {
 
             try {
                 final String key = keyGenerator.getSymbolsSetKey();
-                final long added = redis.sadd(key, symbol.toUpperCase());
+                redis.sadd(key, symbol.toUpperCase());
 
-                if (added > 0) {
-                    log.debug("Added symbol to tracked set: {}", symbol);
-                } else {
-                    log.trace("Symbol already in tracked set: {}", symbol);
-                }
             } catch (Exception e) {
                 log.error("Failed to add symbol to tracked set: {}", symbol, e);
                 throw new CacheOperationException("Failed to track symbol: " + symbol, e);
@@ -111,13 +106,11 @@ public class MarketDataCacheManager {
         });
     }
 
-
     private void validateSymbol(final String symbol) {
         if (symbol == null || symbol.trim().isEmpty()) {
             throw new IllegalArgumentException("Symbol cannot be null or empty");
         }
     }
-
 
     private void validateInput(final String symbol, final MarketDataResponse data) {
         validateSymbol(symbol);
@@ -125,7 +118,6 @@ public class MarketDataCacheManager {
             throw new IllegalArgumentException("MarketDataResponse cannot be null");
         }
     }
-
 
     public static class CacheOperationException extends RuntimeException {
         public CacheOperationException(final String message, final Throwable cause) {
