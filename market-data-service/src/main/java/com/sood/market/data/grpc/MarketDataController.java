@@ -26,11 +26,11 @@ public class MarketDataController extends MarketDataServiceGrpc.MarketDataServic
                             responseObserver.onNext(response);
                             responseObserver.onCompleted();
                         },
-                        error -> handleError(symbol, error, responseObserver)
+                        error -> handleError(error, responseObserver)
                 );
     }
 
-    private void handleError(final String symbol, final Throwable error, final StreamObserver<MarketDataResponse> observer) {
+    private void handleError(final Throwable error, final StreamObserver<MarketDataResponse> observer) {
         observer.onError(Status.INTERNAL
                 .withDescription("Błąd podczas pobierania danych")
                 .augmentDescription(error.getMessage())
