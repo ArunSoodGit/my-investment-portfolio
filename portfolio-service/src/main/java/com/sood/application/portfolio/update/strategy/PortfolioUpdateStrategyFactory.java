@@ -10,18 +10,18 @@ import sood.found.TransactionCreatedEvent;
 @Singleton
 public class PortfolioUpdateStrategyFactory {
 
-    private final BuyStrategy buyStrategy;
-    private final SellStrategy sellStrategy;
+    private final BuyUpdateStrategy buyUpdateStrategy;
+    private final SellUpdateStrategy sellUpdateStrategy;
 
-    public PortfolioUpdateStrategyFactory(final BuyStrategy buyStrategy, final SellStrategy sellStrategy) {
-        this.buyStrategy = buyStrategy;
-        this.sellStrategy = sellStrategy;
+    public PortfolioUpdateStrategyFactory(final BuyUpdateStrategy buyUpdateStrategy, final SellUpdateStrategy sellUpdateStrategy) {
+        this.buyUpdateStrategy = buyUpdateStrategy;
+        this.sellUpdateStrategy = sellUpdateStrategy;
     }
 
     public PortfolioUpdateStrategy get(final TransactionCreatedEvent event) {
         return switch (event.type()) {
-            case BUY -> buyStrategy;
-            case SELL -> sellStrategy;
+            case BUY -> buyUpdateStrategy;
+            case SELL -> sellUpdateStrategy;
         };
     }
 }

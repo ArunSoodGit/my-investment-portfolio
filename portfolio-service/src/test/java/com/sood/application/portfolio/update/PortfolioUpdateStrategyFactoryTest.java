@@ -1,9 +1,9 @@
 package com.sood.application.portfolio.update;
 
-import com.sood.application.portfolio.update.strategy.BuyStrategy;
+import com.sood.application.portfolio.update.strategy.BuyUpdateStrategy;
 import com.sood.application.portfolio.update.strategy.PortfolioUpdateStrategy;
 import com.sood.application.portfolio.update.strategy.PortfolioUpdateStrategyFactory;
-import com.sood.application.portfolio.update.strategy.SellStrategy;
+import com.sood.application.portfolio.update.strategy.SellUpdateStrategy;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,16 +20,16 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 class PortfolioUpdateStrategyFactoryTest {
 
     @Mock
-    private BuyStrategy buyStrategy;
+    private BuyUpdateStrategy buyUpdateStrategy;
 
     @Mock
-    private SellStrategy sellStrategy;
+    private SellUpdateStrategy sellUpdateStrategy;
 
     private PortfolioUpdateStrategyFactory factory;
 
     @BeforeEach
     void setup() {
-        factory = new PortfolioUpdateStrategyFactory(buyStrategy, sellStrategy);
+        factory = new PortfolioUpdateStrategyFactory(buyUpdateStrategy, sellUpdateStrategy);
     }
 
     @Test
@@ -41,7 +41,7 @@ class PortfolioUpdateStrategyFactoryTest {
         final PortfolioUpdateStrategy strategy = factory.get(event);
 
         // then
-        assertSame(buyStrategy, strategy);
+        assertSame(buyUpdateStrategy, strategy);
     }
 
     @Test
@@ -54,6 +54,6 @@ class PortfolioUpdateStrategyFactoryTest {
         final PortfolioUpdateStrategy strategy = factory.get(event);
 
         // then
-        assertSame(sellStrategy, strategy);
+        assertSame(sellUpdateStrategy, strategy);
     }
 }

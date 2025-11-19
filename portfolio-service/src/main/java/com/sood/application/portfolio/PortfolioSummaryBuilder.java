@@ -47,15 +47,13 @@ public class PortfolioSummaryBuilder {
         return CalculatorHelper.calculateTotalValue(averagePurchasePrice, quantity);
     }
 
-    private BigDecimal parsePrice(final String priceStr) {
-        if (priceStr == null || priceStr.isBlank()) {
-            log.warn("Invalid price value: {}", priceStr);
+    private BigDecimal parsePrice(final String price) {
+        if (price == null || price.isBlank()) {
             return BigDecimal.ZERO;
         }
         try {
-            return new BigDecimal(priceStr);
+            return new BigDecimal(price);
         } catch (NumberFormatException e) {
-            log.error("Failed to parse price: {}", priceStr, e);
             return BigDecimal.ZERO;
         }
     }

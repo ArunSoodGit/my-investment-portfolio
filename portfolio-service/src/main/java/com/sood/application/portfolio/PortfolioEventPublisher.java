@@ -19,12 +19,9 @@ public class PortfolioEventPublisher {
 
     private static final Logger log = LogManager.getLogger(PortfolioEventPublisher.class);
 
-    // Non-static subject instance managed by the singleton bean
     private final PublishSubject<PortfolioEntity> subject;
 
-    // Track active subscriptions for cleanup
     private final Map<Long, CompositeDisposable> activeSubscriptions;
-
 
     public PortfolioEventPublisher() {
         this.subject = PublishSubject.create();

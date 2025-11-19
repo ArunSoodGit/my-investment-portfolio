@@ -1,5 +1,6 @@
 package com.sood.application.portfolio.update.strategy;
 
+import com.sood.application.portfolio.item.PortfolioItemFactory;
 import com.sood.application.portfolio.update.PortfolioItemCalculator;
 import com.sood.infrastructure.entity.PortfolioEntity;
 import com.sood.infrastructure.entity.PortfolioItemEntity;
@@ -7,25 +8,22 @@ import jakarta.inject.Singleton;
 import sood.found.TransactionCreatedEvent;
 
 @Singleton
-public class SellStrategy implements PortfolioUpdateStrategy {
+public class BuyUpdateStrategy implements PortfolioUpdateStrategy {
 
+    private final PortfolioItemFactory factory;
     private final PortfolioItemCalculator calculator;
 
-    public SellStrategy(PortfolioItemCalculator calculator) {
+    public BuyUpdateStrategy(final PortfolioItemFactory factory, final PortfolioItemCalculator calculator) {
+        this.factory = factory;
         this.calculator = calculator;
     }
 
     @Override
     public void update(final PortfolioEntity portfolio, final TransactionCreatedEvent event) {
         final PortfolioItemEntity item = portfolio.findItem(event.symbol())
-                .orElseThrow(() -> new IllegalStateException("Cannot sell non-existing position"));
-        final PortfolioItemEntity updated = calculator.updateForSell(item, event);
+                .orElseGet(() -> factory.create(event));
+        final PortfolioItemEntity updatedItem = calculator.updateForBuy(item, event);
 
-        if (updated == null) {
-            portfolio.removeItem(item);
-            return;
-        }
-
-        portfolio.addItem(updated);
+        portfolio.addItem(updatedItem);
     }
 }

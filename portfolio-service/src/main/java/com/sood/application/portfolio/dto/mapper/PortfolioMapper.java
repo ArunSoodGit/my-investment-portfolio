@@ -61,14 +61,12 @@ public class PortfolioMapper {
         entity.setDescription(dto.getDescription());
         entity.setLastUpdated(dto.getLastUpdated());
 
-        // Convert items
         if (dto.getItems() != null) {
             entity.setItems(dto.getItems().stream()
                     .map(itemDto -> toItemEntity(itemDto, entity))
                     .collect(Collectors.toSet()));
         }
 
-        // Convert history
         if (dto.getHistory() != null) {
             entity.setHistory(dto.getHistory().stream()
                     .map(historyDto -> toHistoryEntity(historyDto, entity))
