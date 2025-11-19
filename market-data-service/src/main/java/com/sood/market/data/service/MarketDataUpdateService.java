@@ -88,7 +88,7 @@ public class MarketDataUpdateService {
                         .doOnSuccess(data -> log.debug("Successfully updated symbol: {}", symbol))
                         .onErrorResumeNext(error -> {
                             log.error("Failed to update symbol {}: {}", symbol, error.getMessage());
-                            return io.reactivex.rxjava3.core.Single.just(createEmptyResponse(symbol));
+                            return Single.just(createEmptyResponse(symbol));
                         })
                 )
                 .ignoreElements()
