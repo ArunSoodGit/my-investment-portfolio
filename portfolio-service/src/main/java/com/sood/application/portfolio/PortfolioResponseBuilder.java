@@ -13,10 +13,10 @@ import java.util.List;
 @Singleton
 public class PortfolioResponseBuilder {
 
-    private final PortfolioCalculator calculator;
+    private final PortfolioSummaryBuilder summaryBuilder;
 
-    public PortfolioResponseBuilder(final PortfolioCalculator calculator) {
-        this.calculator = calculator;
+    public PortfolioResponseBuilder(final PortfolioSummaryBuilder summaryBuilder) {
+        this.summaryBuilder = summaryBuilder;
     }
 
     /**
@@ -24,11 +24,11 @@ public class PortfolioResponseBuilder {
      * Includes calculated summary metrics like total value and profit.
      *
      * @param portfolio the portfolio entity
-     * @param items the portfolio items with current market data
+     * @param items     the portfolio items with current market data
      * @return the constructed portfolio response
      */
     public PortfolioResponse build(final PortfolioEntity portfolio, final List<PortfolioItem> items) {
-        final PortfolioSummary summary = calculator.summarize(items);
+        final PortfolioSummary summary = summaryBuilder.build(items);
         return PortfolioResponse.newBuilder()
                 .setPortfolioId(portfolio.getId())
                 .setUserId(portfolio.getUserId())

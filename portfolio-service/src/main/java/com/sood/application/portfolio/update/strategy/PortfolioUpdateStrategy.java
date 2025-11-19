@@ -1,4 +1,4 @@
-package com.sood.application.portfolio.update;
+package com.sood.application.portfolio.update.strategy;
 
 import com.sood.infrastructure.entity.PortfolioEntity;
 import sood.found.TransactionCreatedEvent;
@@ -9,11 +9,5 @@ import sood.found.TransactionCreatedEvent;
  */
 public interface PortfolioUpdateStrategy {
 
-    /**
-     * Updates a portfolio based on a transaction event.
-     *
-     * @param portfolio the portfolio entity to update
-     * @param event the transaction event triggering the update
-     */
     void update(PortfolioEntity portfolio, TransactionCreatedEvent event);
 }

@@ -1,6 +1,8 @@
 package com.sood.application.portfolio.update;
 
 import com.sood.application.portfolio.PortfolioEventPublisher;
+import com.sood.application.portfolio.update.strategy.PortfolioUpdateStrategy;
+import com.sood.application.portfolio.update.strategy.PortfolioUpdateStrategyFactory;
 import com.sood.infrastructure.entity.PortfolioEntity;
 import com.sood.infrastructure.service.PortfolioService;
 import java.math.BigDecimal;
@@ -32,6 +34,9 @@ class PortfolioUpdateHandlerTest {
     private PortfolioEventPublisher eventPublisher;
 
     @Mock
+    private PortfolioPersistenceService portfolioPersistenceService;
+
+    @Mock
     private PortfolioUpdateStrategy strategy;
 
     private PortfolioUpdateHandler handler;
@@ -39,7 +44,7 @@ class PortfolioUpdateHandlerTest {
 
     @BeforeEach
     void setUp() {
-        handler = new PortfolioUpdateHandler(portfolioService, strategyFactory, eventPublisher);
+        handler = new PortfolioUpdateHandler(portfolioService, strategyFactory, eventPublisher, portfolioPersistenceService);
     }
 
     @Test
@@ -54,12 +59,12 @@ class PortfolioUpdateHandlerTest {
         portfolio.setId(portfolioId);
 
         when(portfolioService.getPortfolio(portfolioId)).thenReturn(portfolio);
-        when(strategyFactory.getStrategy(portfolio, event)).thenReturn(strategy);
+        when(strategyFactory.get(event)).thenReturn(strategy);
 
         handler.handle(event);
 
         verify(portfolioService).getPortfolio(portfolioId);
-        verify(strategyFactory).getStrategy(portfolio, event);
+        verify(strategyFactory).get(event);
         verify(strategy).update(portfolio, event);
     }
 
@@ -75,12 +80,12 @@ class PortfolioUpdateHandlerTest {
         portfolio.setId(portfolioId);
 
         when(portfolioService.getPortfolio(portfolioId)).thenReturn(portfolio);
-        when(strategyFactory.getStrategy(portfolio, event)).thenReturn(strategy);
+        when(strategyFactory.get(event)).thenReturn(strategy);
 
         handler.handle(event);
 
         verify(portfolioService).getPortfolio(portfolioId);
-        verify(strategyFactory).getStrategy(portfolio, event);
+        verify(strategyFactory).get(event);
         verify(strategy).update(portfolio, event);
     }
 
@@ -96,12 +101,12 @@ class PortfolioUpdateHandlerTest {
         portfolio.setId(portfolioId);
 
         when(portfolioService.getPortfolio(portfolioId)).thenReturn(portfolio);
-        when(strategyFactory.getStrategy(portfolio, event)).thenReturn(strategy);
+        when(strategyFactory.get(event)).thenReturn(strategy);
 
         handler.handle(event);
 
         verify(portfolioService).getPortfolio(portfolioId);
-        verify(strategyFactory).getStrategy(portfolio, event);
+        verify(strategyFactory).get(event);
         verify(strategy).update(portfolio, event);
     }
 
@@ -123,14 +128,14 @@ class PortfolioUpdateHandlerTest {
         );
 
         when(portfolioService.getPortfolio(portfolioId)).thenReturn(portfolio);
-        when(strategyFactory.getStrategy(portfolio, event1)).thenReturn(strategy);
-        when(strategyFactory.getStrategy(portfolio, event2)).thenReturn(strategy);
+        when(strategyFactory.get(event1)).thenReturn(strategy);
+        when(strategyFactory.get(event2)).thenReturn(strategy);
 
         handler.handle(event1);
         handler.handle(event2);
 
         verify(portfolioService, times(2)).getPortfolio(portfolioId);
-        verify(strategyFactory, times(2)).getStrategy(eq(portfolio), any(TransactionCreatedEvent.class));
+        verify(strategyFactory, times(2)).get(any(TransactionCreatedEvent.class));
         verify(strategy, times(2)).update(eq(portfolio), any(TransactionCreatedEvent.class));
     }
 }

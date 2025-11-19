@@ -1,6 +1,8 @@
 package com.sood.application.portfolio.update;
 
 import com.sood.application.portfolio.PortfolioEventPublisher;
+import com.sood.application.portfolio.update.strategy.PortfolioUpdateStrategy;
+import com.sood.application.portfolio.update.strategy.PortfolioUpdateStrategyFactory;
 import com.sood.infrastructure.entity.PortfolioEntity;
 import com.sood.infrastructure.service.PortfolioService;
 import io.micronaut.transaction.annotation.Transactional;
@@ -20,26 +22,23 @@ public class PortfolioUpdateHandler {
     private final PortfolioService portfolioService;
     private final PortfolioUpdateStrategyFactory portfolioUpdateStrategyFactory;
     private final PortfolioEventPublisher eventPublisher;
+    private final PortfolioPersistenceService persistenceService;
 
     public PortfolioUpdateHandler(final PortfolioService portfolioService,
-            final PortfolioUpdateStrategyFactory updateStrategyFactory, final PortfolioEventPublisher eventPublisher) {
+            final PortfolioUpdateStrategyFactory updateStrategyFactory, final PortfolioEventPublisher eventPublisher,
+            final PortfolioPersistenceService persistenceService) {
         this.portfolioService = portfolioService;
         this.portfolioUpdateStrategyFactory = updateStrategyFactory;
         this.eventPublisher = eventPublisher;
+        this.persistenceService = persistenceService;
     }
 
-    /**
-     * Processes a transaction event and updates the portfolio accordingly.
-     * Executes within a database transaction to ensure consistency.
-     *
-     * @param event the transaction created event to process
-     */
     @Transactional
     public void handle(final TransactionCreatedEvent event) {
-        final Long portfolioId = event.portfolioId();
-        final PortfolioEntity portfolio = portfolioService.getPortfolio(portfolioId);
-        final PortfolioUpdateStrategy strategy = portfolioUpdateStrategyFactory.getStrategy(portfolio, event);
+        final PortfolioEntity portfolio = portfolioService.getPortfolio(event.portfolioId());
+        final PortfolioUpdateStrategy strategy = portfolioUpdateStrategyFactory.get(event);
         strategy.update(portfolio, event);
+        persistenceService.persist(portfolio);
     }
 
     @Transactional

@@ -3,9 +3,9 @@ package com.sood.application.portfolio;
 import com.example.market.grpc.PortfolioItem;
 import com.sood.application.CalculatorHelper;
 import jakarta.inject.Singleton;
-import lombok.extern.log4j.Log4j2;
 import java.math.BigDecimal;
 import java.util.List;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Calculates portfolio-level financial metrics.
@@ -13,16 +13,8 @@ import java.util.List;
  */
 @Singleton
 @Log4j2
-public class PortfolioCalculator {
-
-    /**
-     * Creates a summary of the portfolio's financial metrics.
-     * Calculates total current value, invested value, profit, and percentage change.
-     *
-     * @param items list of portfolio items
-     * @return portfolio summary with aggregated metrics
-     */
-    public PortfolioSummary summarize(final List<PortfolioItem> items) {
+public class PortfolioSummaryBuilder {
+    public PortfolioSummary build(final List<PortfolioItem> items) {
         final BigDecimal currentValue = calculateCurrentValue(items);
         final BigDecimal investedValue = calculateInvestedValue(items);
         final BigDecimal profitValue = CalculatorHelper.calculateProfitValue(currentValue, investedValue);

@@ -8,22 +8,22 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class PortfolioItemCalculatorTest {
+class PortfolioItemSummaryBuilderTest {
 
-    private PortfolioItemCalculator calculator;
+    private PortfolioItemSummaryBuilder calculator;
 
     @BeforeEach
     void setUp() {
-        calculator = new PortfolioItemCalculator();
+        calculator = new PortfolioItemSummaryBuilder();
     }
 
     @Test
-    void testCalculateWithPositiveProfit() {
+    void testBuildWithPositiveProfit() {
         final PortfolioItemEntity entity = new PortfolioItemEntity();
         entity.setQuantity(10.0);
         entity.setAveragePurchasePrice(new BigDecimal("100.00"));
 
-        final PortfolioItemSummary summary = calculator.calculate(entity, new BigDecimal("150.00"));
+        final PortfolioItemSummary summary = calculator.build(entity, new BigDecimal("150.00"));
 
         assertEquals(10.0, summary.totalQuantity());
         assertEquals(new BigDecimal("1000.00"), summary.investedValue());
@@ -33,12 +33,12 @@ class PortfolioItemCalculatorTest {
     }
 
     @Test
-    void testCalculateWithNegativeProfit() {
+    void testBuildWithNegativeProfit() {
         final PortfolioItemEntity entity = new PortfolioItemEntity();
         entity.setQuantity(10.0);
         entity.setAveragePurchasePrice(new BigDecimal("150.00"));
 
-        final PortfolioItemSummary summary = calculator.calculate(entity, new BigDecimal("100.00"));
+        final PortfolioItemSummary summary = calculator.build(entity, new BigDecimal("100.00"));
 
         assertEquals(10.0, summary.totalQuantity());
         assertEquals(new BigDecimal("1500.00"), summary.investedValue());
@@ -48,12 +48,12 @@ class PortfolioItemCalculatorTest {
     }
 
     @Test
-    void testCalculateWithBreakEven() {
+    void testBuildWithBreakEven() {
         final PortfolioItemEntity entity = new PortfolioItemEntity();
         entity.setQuantity(10.0);
         entity.setAveragePurchasePrice(new BigDecimal("100.00"));
 
-        final PortfolioItemSummary summary = calculator.calculate(entity, new BigDecimal("100.00"));
+        final PortfolioItemSummary summary = calculator.build(entity, new BigDecimal("100.00"));
 
         assertEquals(10.0, summary.totalQuantity());
         assertEquals(new BigDecimal("1000.00"), summary.investedValue());
@@ -63,8 +63,8 @@ class PortfolioItemCalculatorTest {
     }
 
     @Test
-    void testCalculateWithNullEntity() {
-        final PortfolioItemSummary summary = calculator.calculate(null, new BigDecimal("100.00"));
+    void testBuildWithNullEntity() {
+        final PortfolioItemSummary summary = calculator.build(null, new BigDecimal("100.00"));
 
         assertEquals(0.0, summary.totalQuantity());
         assertEquals(BigDecimal.ZERO, summary.investedValue());
@@ -74,12 +74,12 @@ class PortfolioItemCalculatorTest {
     }
 
     @Test
-    void testCalculateWithNullPrice() {
+    void testBuildWithNullPrice() {
         final PortfolioItemEntity entity = new PortfolioItemEntity();
         entity.setQuantity(10.0);
         entity.setAveragePurchasePrice(new BigDecimal("100.00"));
 
-        final PortfolioItemSummary summary = calculator.calculate(entity, null);
+        final PortfolioItemSummary summary = calculator.build(entity, null);
 
         assertEquals(0.0, summary.totalQuantity());
         assertEquals(BigDecimal.ZERO, summary.investedValue());
@@ -89,12 +89,12 @@ class PortfolioItemCalculatorTest {
     }
 
     @Test
-    void testCalculateWithNullAveragePurchasePrice() {
+    void testBuildWithNullAveragePurchasePrice() {
         final PortfolioItemEntity entity = new PortfolioItemEntity();
         entity.setQuantity(10.0);
         entity.setAveragePurchasePrice(null);
 
-        final PortfolioItemSummary summary = calculator.calculate(entity, new BigDecimal("150.00"));
+        final PortfolioItemSummary summary = calculator.build(entity, new BigDecimal("150.00"));
 
         assertEquals(10.0, summary.totalQuantity());
         assertEquals(new BigDecimal("0.00"), summary.investedValue());
@@ -102,12 +102,12 @@ class PortfolioItemCalculatorTest {
     }
 
     @Test
-    void testCalculateWithZeroQuantity() {
+    void testBuildWithZeroQuantity() {
         final PortfolioItemEntity entity = new PortfolioItemEntity();
         entity.setQuantity(0.0);
         entity.setAveragePurchasePrice(new BigDecimal("100.00"));
 
-        final PortfolioItemSummary summary = calculator.calculate(entity, new BigDecimal("150.00"));
+        final PortfolioItemSummary summary = calculator.build(entity, new BigDecimal("150.00"));
 
         assertEquals(0.0, summary.totalQuantity());
         assertEquals(new BigDecimal("0.00"), summary.investedValue());
@@ -115,12 +115,12 @@ class PortfolioItemCalculatorTest {
     }
 
     @Test
-    void testCalculateWithFractionalQuantity() {
+    void testBuildWithFractionalQuantity() {
         final PortfolioItemEntity entity = new PortfolioItemEntity();
         entity.setQuantity(2.5);
         entity.setAveragePurchasePrice(new BigDecimal("100.00"));
 
-        final PortfolioItemSummary summary = calculator.calculate(entity, new BigDecimal("120.00"));
+        final PortfolioItemSummary summary = calculator.build(entity, new BigDecimal("120.00"));
 
         assertEquals(2.5, summary.totalQuantity());
         assertEquals(new BigDecimal("250.00"), summary.investedValue());

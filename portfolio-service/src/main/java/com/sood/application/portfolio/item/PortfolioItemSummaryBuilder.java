@@ -11,7 +11,7 @@ import java.math.RoundingMode;
  * Computes financial data for a single stock position including profit/loss.
  */
 @Singleton
-public class PortfolioItemCalculator {
+public class PortfolioItemSummaryBuilder {
 
     /**
      * Calculates financial metrics for a portfolio item.
@@ -21,7 +21,7 @@ public class PortfolioItemCalculator {
      * @param currentPrice the current stock price
      * @return summary with calculated metrics for the item
      */
-    public PortfolioItemSummary calculate(final PortfolioItemEntity entity, final BigDecimal currentPrice) {
+    public PortfolioItemSummary build(final PortfolioItemEntity entity, final BigDecimal currentPrice) {
         if (entity == null || currentPrice == null) {
             return emptySummary();
         }

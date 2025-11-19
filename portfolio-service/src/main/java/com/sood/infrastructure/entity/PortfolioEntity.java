@@ -9,6 +9,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -30,8 +31,10 @@ public class PortfolioEntity {
     @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PortfolioHistoryEntity> history = new HashSet<>();
 
-    public boolean hasItem(final String symbol) {
-        return items.stream().anyMatch(item -> item.getSymbol().equals(symbol));
+    public Optional<PortfolioItemEntity> findItem(final String symbol) {
+        return items.stream()
+                .filter(item -> item.getSymbol().equals(symbol))
+                .findFirst();
     }
 
     public void addItem(final PortfolioItemEntity item) {
@@ -98,5 +101,4 @@ public class PortfolioEntity {
     public void setHistory(Set<PortfolioHistoryEntity> history) {
         this.history = history;
     }
-
 }

@@ -16,23 +16,23 @@ import static com.sood.application.portfolio.util.PriceUtils.parsePrice;
 @Singleton
 public class PortfolioItemBuilder {
 
-    private final PortfolioItemCalculator itemCalculator;
+    private final PortfolioItemSummaryBuilder summaryBuilder;
 
-    public PortfolioItemBuilder(final PortfolioItemCalculator itemCalculator) {
-        this.itemCalculator = itemCalculator;
+    public PortfolioItemBuilder(final PortfolioItemSummaryBuilder summaryBuilder) {
+        this.summaryBuilder = summaryBuilder;
     }
 
     /**
      * Builds a gRPC PortfolioItem from a portfolio item entity and market data.
      * Calculates metrics like profit and includes current market information.
      *
-     * @param entity the portfolio item entity
+     * @param entity     the portfolio item entity
      * @param marketData the current market data for the stock
      * @return the constructed portfolio item response
      */
     public PortfolioItem build(final PortfolioItemEntity entity, final MarketDataResponse marketData) {
         final BigDecimal currentPrice = parsePrice(marketData.getPrice());
-        final PortfolioItemSummary itemSummary = itemCalculator.calculate(entity, currentPrice);
+        final PortfolioItemSummary itemSummary = summaryBuilder.build(entity, currentPrice);
 
         return PortfolioItem.newBuilder()
                 .setSymbol(entity.getSymbol())
