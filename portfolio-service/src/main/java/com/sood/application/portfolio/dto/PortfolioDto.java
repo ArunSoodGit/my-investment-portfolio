@@ -1,5 +1,6 @@
 package com.sood.application.portfolio.dto;
 
+import com.sood.application.portfolio.history.dto.PortfolioHistoryDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

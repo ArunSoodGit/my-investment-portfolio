@@ -2,6 +2,7 @@ package com.sood;
 
 import com.sood.application.portfolio.PortfolioStreamer;
 import com.sood.application.portfolio.history.PortfolioHistoryManager;
+import com.sood.domain.MarketSessionMonitor;
 import com.sood.infrastructure.entity.PortfolioEntity;
 import com.sood.infrastructure.service.PortfolioService;
 import io.micronaut.scheduling.annotation.Scheduled;

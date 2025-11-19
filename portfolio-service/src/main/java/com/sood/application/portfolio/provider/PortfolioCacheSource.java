@@ -2,7 +2,7 @@ package com.sood.application.portfolio.provider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sood.application.portfolio.dto.PortfolioDto;
-import com.sood.application.portfolio.dto.PortfolioMapper;
+import com.sood.application.portfolio.dto.mapper.PortfolioMapper;
 import com.sood.infrastructure.entity.PortfolioEntity;
 import io.lettuce.core.api.sync.RedisCommands;
 import jakarta.inject.Named;
