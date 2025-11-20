@@ -1,11 +1,9 @@
 package com.sood.application.portfolio.history;
 
 import com.example.market.grpc.PortfolioHistoryResponse;
-import com.example.market.grpc.PortfolioItem;
 import com.example.market.grpc.PortfolioResponse;
 import com.sood.infrastructure.entity.PortfolioEntity;
 import com.sood.infrastructure.entity.PortfolioHistoryEntity;
-import com.sood.infrastructure.entity.SnapshotStockData;
 import com.sood.infrastructure.service.PortfolioHistoryService;
 import com.sood.infrastructure.service.PortfolioService;
 import jakarta.inject.Singleton;
@@ -50,19 +48,6 @@ public class PortfolioHistoryManager {
      */
     public void save(final PortfolioResponse response) {
         final PortfolioEntity portfolio = portfolioService.getPortfolio(response.getPortfolioId());
-        final List<SnapshotStockData> snapshotData = response.getItemsList().stream()
-                .map(PortfolioHistoryManager::toSnapshotStockData)
-                .toList();
-        historyService.save(response, portfolio, snapshotData);
-    }
-
-    private static SnapshotStockData toSnapshotStockData(final PortfolioItem item) {
-        final SnapshotStockData data = new SnapshotStockData();
-        data.setSymbol(item.getSymbol());
-        data.setCurrentPrice(item.getCurrentPrice());
-        data.setPercentageChange(item.getPercentageChange());
-        data.setCompanyName(item.getName());
-        data.setExchange(item.getExchange());
-        return data;
+        historyService.save(response, portfolio);
     }
 }

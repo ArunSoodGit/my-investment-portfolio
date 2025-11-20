@@ -3,11 +3,9 @@ package com.sood.application.portfolio.dto.mapper;
 import com.sood.application.portfolio.dto.PortfolioDto;
 import com.sood.application.portfolio.dto.PortfolioItemDto;
 import com.sood.application.portfolio.history.dto.PortfolioHistoryDto;
-import com.sood.application.portfolio.history.dto.SnapshotStockDataDto;
 import com.sood.infrastructure.entity.PortfolioEntity;
 import com.sood.infrastructure.entity.PortfolioHistoryEntity;
 import com.sood.infrastructure.entity.PortfolioItemEntity;
-import com.sood.infrastructure.entity.SnapshotStockData;
 import jakarta.inject.Singleton;
 import java.util.stream.Collectors;
 
@@ -105,9 +103,6 @@ public class PortfolioMapper {
                 .date(entity.getDate())
                 .investedValue(entity.getInvestedValue())
                 .currentValue(entity.getCurrentValue())
-                .stocksData(entity.getStocksData().stream()
-                        .map(this::toSnapshotDto)
-                        .collect(Collectors.toList()))
                 .build();
     }
 
@@ -118,38 +113,6 @@ public class PortfolioMapper {
         entity.setInvestedValue(dto.getInvestedValue());
         entity.setCurrentValue(dto.getCurrentValue());
         entity.setPortfolio(portfolio);
-
-        if (dto.getStocksData() != null) {
-            entity.setStocksData(dto.getStocksData().stream()
-                    .map(snapshotDto -> toSnapshotEntity(snapshotDto, entity))
-                    .collect(Collectors.toList()));
-        }
-
-        return entity;
-    }
-
-    private SnapshotStockDataDto toSnapshotDto(final SnapshotStockData entity) {
-        return SnapshotStockDataDto.builder()
-                .id(entity.getId())
-                .createdAt(entity.getCreatedAt())
-                .symbol(entity.getSymbol())
-                .currentPrice(entity.getCurrentPrice())
-                .percentageChange(entity.getPercentageChange())
-                .companyName(entity.getCompanyName())
-                .exchange(entity.getExchange())
-                .build();
-    }
-
-    private SnapshotStockData toSnapshotEntity(final SnapshotStockDataDto dto, final PortfolioHistoryEntity history) {
-        final SnapshotStockData entity = new SnapshotStockData();
-        entity.setId(dto.getId());
-        entity.setCreatedAt(dto.getCreatedAt());
-        entity.setSymbol(dto.getSymbol());
-        entity.setCurrentPrice(dto.getCurrentPrice());
-        entity.setPercentageChange(dto.getPercentageChange());
-        entity.setCompanyName(dto.getCompanyName());
-        entity.setExchange(dto.getExchange());
-        entity.setPortfolioHistory(history);
         return entity;
     }
 }

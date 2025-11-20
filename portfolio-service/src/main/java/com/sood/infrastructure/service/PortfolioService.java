@@ -18,11 +18,11 @@ public class PortfolioService {
     }
 
     public PortfolioEntity getPortfolio(final Long portfolioId) {
-        return repository.findByIdWithItemsAndTransactions(portfolioId)
+        return repository.findByIdWithItemsAndHistory(portfolioId)
                 .orElseThrow(() -> new NoSuchElementException(String.format(PORTFOLIO_NOT_FOUND_MESSAGE, portfolioId)));
     }
 
     public List<PortfolioEntity> findAll() {
-        return repository.findAllWithItemsAndTransactions();
+        return repository.findAllWithItemsAndHistory();
     }
 }

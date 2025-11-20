@@ -3,7 +3,6 @@ package com.sood.infrastructure.service;
 import com.example.market.grpc.PortfolioResponse;
 import com.sood.infrastructure.entity.PortfolioEntity;
 import com.sood.infrastructure.entity.PortfolioHistoryEntity;
-import com.sood.infrastructure.entity.SnapshotStockData;
 import com.sood.infrastructure.repository.PortfolioHistoryRepository;
 import io.micronaut.transaction.annotation.Transactional;
 import jakarta.inject.Singleton;
@@ -26,14 +25,12 @@ public class PortfolioHistoryService {
     }
 
     @Transactional
-    public void save(final PortfolioResponse response, final PortfolioEntity portfolio,
-            final List<SnapshotStockData> snapshotData) {
+    public void save(final PortfolioResponse response, final PortfolioEntity portfolio) {
         final PortfolioHistoryEntity historyEntity = new PortfolioHistoryEntity();
         historyEntity.setDate(LocalDateTime.now().withSecond(0).withNano(0));
         historyEntity.setPortfolio(portfolio);
         historyEntity.setCurrentValue(new BigDecimal(response.getCurrentValue()));
         historyEntity.setInvestedValue(new BigDecimal(response.getInvestedValue()));
-        snapshotData.forEach(historyEntity::addStockData);
 
         repository.save(historyEntity);
     }
