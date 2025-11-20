@@ -11,6 +11,8 @@ import io.micronaut.grpc.annotation.GrpcService;
 @GrpcService
 public class MarketDataController extends MarketDataServiceGrpc.MarketDataServiceImplBase {
 
+    private static final String ERROR_FETCHING_MARKET_DATA = "Error fetching market data.";
+
     private final MarketDataService service;
 
     public MarketDataController(final MarketDataService service) {
@@ -32,7 +34,7 @@ public class MarketDataController extends MarketDataServiceGrpc.MarketDataServic
 
     private void handleError(final Throwable error, final StreamObserver<MarketDataResponse> observer) {
         observer.onError(Status.INTERNAL
-                .withDescription("Błąd podczas pobierania danych")
+                .withDescription(ERROR_FETCHING_MARKET_DATA)
                 .augmentDescription(error.getMessage())
                 .asRuntimeException()
         );

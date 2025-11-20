@@ -9,6 +9,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import jakarta.inject.Singleton;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -38,13 +39,6 @@ public class MarketDataUpdateService {
         this.rateLimiter = rateLimiter;
     }
 
-    /**
-     * Refreshes market data for all tracked symbols.
-     * Fetches all symbols from cache, updates them from API with rate limiting,
-     * and publishes update event when complete.
-     *
-     * @return Completable that completes when all updates are done
-     */
     public Completable refreshAllSymbols() {
         log.info("Starting market data refresh for all symbols");
 
@@ -67,13 +61,6 @@ public class MarketDataUpdateService {
                 );
     }
 
-    /**
-     * Refreshes market data for a specific set of symbols.
-     * Applies rate limiting and handles errors gracefully.
-     *
-     * @param symbols the set of symbols to refresh
-     * @return Completable that completes when all symbols are refreshed
-     */
     public Completable refreshSymbols(final Set<String> symbols) {
         if (symbols == null || symbols.isEmpty()) {
             log.debug("Empty symbol set provided, skipping refresh");
@@ -83,24 +70,19 @@ public class MarketDataUpdateService {
         log.debug("Refreshing {} symbols with rate limiting", symbols.size());
 
         return Observable.fromIterable(symbols)
-                .compose(rateLimiter::applyRateLimit)
-                .flatMapSingle(symbol -> fetchAndCacheSymbol(symbol)
-                        .doOnSuccess(data -> log.debug("Successfully updated symbol: {}", symbol))
-                        .onErrorResumeNext(error -> {
-                            log.error("Failed to update symbol {}: {}", symbol, error.getMessage());
-                            return Single.just(createEmptyResponse(symbol));
-                        })
+                .concatMapSingle(symbol ->
+                        Single.just(symbol)
+                                .delay(rateLimiter.getDelayMs(), TimeUnit.MILLISECONDS)
+                                .flatMap(this::fetchAndCacheSymbol)
+                                .onErrorResumeNext(error -> {
+                                    log.error("Failed to update symbol {}: {}", symbol, error.getMessage());
+                                    return Single.just(createEmptyResponse(symbol));
+                                })
                 )
                 .ignoreElements()
                 .doOnComplete(() -> log.info("Completed refresh of {} symbols", symbols.size()));
     }
 
-    /**
-     * Fetches market data for a single symbol from API and caches it.
-     *
-     * @param symbol the stock symbol
-     * @return Single emitting the fetched market data
-     */
     private Single<MarketDataResponse> fetchAndCacheSymbol(final String symbol) {
         return apiClient.fetchMarketData(symbol)
                 .flatMap(marketData ->
@@ -112,13 +94,6 @@ public class MarketDataUpdateService {
                 );
     }
 
-    /**
-     * Creates an empty response for error cases.
-     * Used to continue processing other symbols when one fails.
-     *
-     * @param symbol the symbol that failed
-     * @return empty MarketDataResponse
-     */
     private MarketDataResponse createEmptyResponse(final String symbol) {
         return MarketDataResponse.newBuilder()
                 .setSymbol(symbol)

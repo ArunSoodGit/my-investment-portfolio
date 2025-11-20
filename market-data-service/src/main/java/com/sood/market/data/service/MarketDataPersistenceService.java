@@ -34,10 +34,6 @@ public class MarketDataPersistenceService {
         repository.save(entity);
     }
 
-    /**
-     * Refreshes all market data in database from cache.
-     * WARNING: This deletes all existing data before refresh.
-     */
     public void refreshDatabaseFromCache() {
         repository.deleteAll();
 
@@ -51,13 +47,6 @@ public class MarketDataPersistenceService {
                 .forEach(this::persistMarketData);
     }
 
-    /**
-     * Caches market data response and registers the symbol.
-     *
-     * @param symbol     the stock symbol
-     * @param marketData the market data to cache
-     * @return Completable indicating cache operation completion
-     */
     public Completable cacheMarketData(final String symbol, final MarketDataResponse marketData) {
         return cache.put(symbol, marketData)
                 .andThen(cache.putSymbol(symbol))
