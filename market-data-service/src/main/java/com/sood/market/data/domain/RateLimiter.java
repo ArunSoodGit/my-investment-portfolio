@@ -6,13 +6,6 @@ import jakarta.inject.Singleton;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.log4j.Log4j2;
 
-/**
- * Manages API rate limiting to comply with external API restrictions.
- * Applies delays between requests to avoid exceeding rate limits.
- * <p>
- * This is configurable through application.yml, replacing hardcoded values
- * and following best practices for external API integration.
- */
 @Singleton
 @Log4j2
 public class RateLimiter {

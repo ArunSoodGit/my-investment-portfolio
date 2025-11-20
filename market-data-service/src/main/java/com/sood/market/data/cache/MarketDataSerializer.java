@@ -7,10 +7,6 @@ import com.sood.market.data.exception.CacheSerializationException;
 import jakarta.inject.Singleton;
 import lombok.extern.log4j.Log4j2;
 
-/**
- * Handles serialization and deserialization of MarketDataResponse for caching.
- * Uses Protocol Buffers JSON format for Redis storage.
- */
 @Singleton
 @Log4j2
 public class MarketDataSerializer {
@@ -23,13 +19,6 @@ public class MarketDataSerializer {
         this.parser = JsonFormat.parser().ignoringUnknownFields();
     }
 
-    /**
-     * Serializes MarketDataResponse to JSON string.
-     *
-     * @param data the market data to serialize
-     * @return JSON string representation
-     * @throws CacheSerializationException if serialization fails
-     */
     public String serialize(final MarketDataResponse data) {
         if (data == null) {
             throw new IllegalArgumentException("MarketDataResponse cannot be null");
@@ -43,13 +32,6 @@ public class MarketDataSerializer {
         }
     }
 
-    /**
-     * Deserializes JSON string to MarketDataResponse.
-     *
-     * @param json the JSON string
-     * @return deserialized MarketDataResponse
-     * @throws CacheSerializationException if deserialization fails
-     */
     public MarketDataResponse deserialize(final String json) {
         if (json == null || json.trim().isEmpty()) {
             throw new IllegalArgumentException("JSON string cannot be null or empty");

@@ -8,13 +8,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import lombok.extern.log4j.Log4j2;
 
-/**
- * Manages market session state and timing logic.
- * Determines whether stock market (NYSE) is currently open or closed.
- * <p>
- * This replaces static methods in MarketSessionMonitor with proper instance methods
- * following SOLID principles and enabling easier testing.
- */
 @Singleton
 @Log4j2
 public class MarketSession {
@@ -34,12 +27,11 @@ public class MarketSession {
                 timezone, openTime, closeTime);
     }
 
-    /**
-     * Checks if the stock market is currently open.
-     * Market is open Monday-Friday between market open and close times.
-     *
-     * @return true if market is currently open
-     */
+    public boolean isNewDay() {
+        final ZonedDateTime now = getCurrentMarketTime();
+        return now.toLocalTime().isBefore(LocalTime.of(1, 0));
+    }
+
     public boolean isMarketOpen() {
         final ZonedDateTime now = getCurrentMarketTime();
         final DayOfWeek dayOfWeek = now.getDayOfWeek();
@@ -59,12 +51,6 @@ public class MarketSession {
         return isOpen;
     }
 
-    /**
-     * Checks if current time is after market close time.
-     * Useful for determining when to save end-of-day snapshots.
-     *
-     * @return true if current time is after market close
-     */
     public boolean isAfterMarketClose() {
         final ZonedDateTime now = getCurrentMarketTime();
         final LocalTime currentTime = now.toLocalTime();
@@ -72,24 +58,7 @@ public class MarketSession {
         return currentTime.isAfter(marketCloseTime);
     }
 
-    /**
-     * Checks if it's a new day (before 1 AM market time).
-     * Used to reset daily flags.
-     *
-     * @return true if it's before 1 AM in market timezone
-     */
-    public boolean isNewDay() {
-        final ZonedDateTime now = getCurrentMarketTime();
-        return now.toLocalTime().isBefore(LocalTime.of(1, 0));
-    }
-
-    /**
-     * Gets current time in market timezone.
-     *
-     * @return current ZonedDateTime in market timezone
-     */
-    public ZonedDateTime getCurrentMarketTime() {
+    private ZonedDateTime getCurrentMarketTime() {
         return ZonedDateTime.now(marketTimeZone);
     }
-
 }

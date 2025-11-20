@@ -21,21 +21,18 @@ public class MarketDataApiClient {
     private final MarketDataMapper mapper;
     private final ObjectMapper jsonMapper;
     private final String apiKey;
+    private final ResponseValidator validator;
 
     public MarketDataApiClient(final TwelveDataClient twelveDataClient, final MarketDataMapper mapper,
-            final ObjectMapper jsonMapper, @Value("${twelvedata.apiKey}") final String apiKey) {
+            final ObjectMapper jsonMapper, @Value("${twelvedata.apiKey}") final String apiKey,
+            final ResponseValidator validator) {
         this.twelveDataClient = twelveDataClient;
         this.mapper = mapper;
         this.jsonMapper = jsonMapper;
         this.apiKey = apiKey;
+        this.validator = validator;
     }
 
-    /**
-     * Fetches market data from TwelveData API.
-     *
-     * @param symbol the stock symbol
-     * @return Single emitting MarketDataResponse
-     */
     public Single<MarketDataResponse> fetchMarketData(final String symbol) {
         return twelveDataClient.getData(apiKey, symbol)
                 .flatMap(jsonResponse -> mapResponse(symbol, jsonResponse))
@@ -45,25 +42,13 @@ public class MarketDataApiClient {
     private Single<MarketDataResponse> mapResponse(final String symbol, final String jsonResponse) {
         try {
             final TwelveDataResponse apiResponse = jsonMapper.readValue(jsonResponse, TwelveDataResponse.class);
-            validateApiResponse(apiResponse, symbol);
+            validator.validate(apiResponse, symbol);
 
             final MarketDataResponse grpcResponse = mapper.toGrpcResponse(apiResponse);
             return Single.just(grpcResponse);
 
         } catch (Exception e) {
             return Single.error(new MarketDataApiException("Failed to parse API response for symbol: " + symbol, e));
-        }
-    }
-
-    private void validateApiResponse(final TwelveDataResponse response, final String symbol) {
-        if (response == null) {
-            throw new MarketDataApiException("API returned null response for symbol: " + symbol);
-        }
-        if (response.getSymbol() == null || response.getSymbol().isEmpty()) {
-            throw new MarketDataApiException("API response missing symbol field");
-        }
-        if (response.getClose() == null || response.getClose().isEmpty()) {
-            throw new MarketDataApiException("API response missing price data for symbol: " + symbol);
         }
     }
 }
