@@ -1,5 +1,6 @@
-package com.sood.transaction;
+package com.sood.transaction.grpc;
 
+import com.sood.transaction.TransactionType;
 import io.micronaut.serde.annotation.Serdeable;
 import lombok.Builder;
 import lombok.Data;
@@ -7,7 +8,7 @@ import lombok.Data;
 @Data
 @Builder
 @Serdeable
-public class TransactionRequest {
+public class TransactionGrpcRequest {
 
     final String symbol;
     final double quantity;

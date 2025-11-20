@@ -1,5 +1,6 @@
 package com.sood.transaction;
 
+import com.sood.transaction.grpc.TransactionGrpcRequest;
 import com.sood.transaction.model.TransactionDTO;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
@@ -28,7 +29,7 @@ public class TransactionController {
     }
 
     @Post("/{portfolioId}")
-    public Single<Boolean> addTransaction(@PathVariable final Long portfolioId, @Body final TransactionRequest request) {
+    public Single<Boolean> addTransaction(@PathVariable final Long portfolioId, @Body final TransactionGrpcRequest request) {
         return transactionService.addTransaction(portfolioId, request);
     }
 
