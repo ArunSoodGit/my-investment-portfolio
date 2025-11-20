@@ -1,20 +1,14 @@
 package com.sood.application.portfolio.history;
 
 import com.example.market.grpc.PortfolioHistoryResponse;
-import com.example.market.grpc.PortfolioItem;
 import com.example.market.grpc.PortfolioResponse;
 import com.sood.infrastructure.entity.PortfolioEntity;
 import com.sood.infrastructure.entity.PortfolioHistoryEntity;
-import com.sood.infrastructure.entity.SnapshotStockData;
 import com.sood.infrastructure.service.PortfolioHistoryService;
 import com.sood.infrastructure.service.PortfolioService;
 import jakarta.inject.Singleton;
 import java.util.List;
 
-/**
- * Manages portfolio history operations.
- * Handles retrieval and persistence of portfolio snapshots and their history data.
- */
 @Singleton
 public class PortfolioHistoryManager {
 
@@ -30,39 +24,14 @@ public class PortfolioHistoryManager {
         this.portfolioService = portfolioService;
     }
 
-    /**
-     * Retrieves portfolio history for a given portfolio ID.
-     *
-     * @param portfolioId the portfolio identifier
-     * @return the portfolio history response
-     */
     public PortfolioHistoryResponse get(final Long portfolioId) {
         final PortfolioEntity portfolio = portfolioService.getPortfolio(portfolioId);
         final List<PortfolioHistoryEntity> portfolioHistoryEntities = historyService.findByPortfolio(portfolio);
         return responseBuilder.build(portfolioHistoryEntities);
     }
 
-    /**
-     * Saves a portfolio snapshot as history.
-     * Transforms portfolio response data into history entity format.
-     *
-     * @param response the portfolio response to save
-     */
     public void save(final PortfolioResponse response) {
         final PortfolioEntity portfolio = portfolioService.getPortfolio(response.getPortfolioId());
-        final List<SnapshotStockData> snapshotData = response.getItemsList().stream()
-                .map(PortfolioHistoryManager::toSnapshotStockData)
-                .toList();
-        historyService.save(response, portfolio, snapshotData);
-    }
-
-    private static SnapshotStockData toSnapshotStockData(final PortfolioItem item) {
-        final SnapshotStockData data = new SnapshotStockData();
-        data.setSymbol(item.getSymbol());
-        data.setCurrentPrice(item.getCurrentPrice());
-        data.setPercentageChange(item.getPercentageChange());
-        data.setCompanyName(item.getName());
-        data.setExchange(item.getExchange());
-        return data;
+        historyService.save(response, portfolio);
     }
 }
