@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.example.market.grpc";
+option java_outer_classname = "AuthProto";
+
+package market;
+
+message TokenValidationRequest {
+  string token = 1;
+}
+
+message TokenValidationResponse {
+  bool valid = 1;
+  string error = 2;
+  string user_id = 3;
+  string username = 4;
+  repeated string roles = 5;
+  string token_type = 6;
+}
+
+message LoginRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+  string message = 2;
+  bool success = 3;
+  int64 expiration = 4;
+}
+
+message RegisterRequest {
+  string username = 1;
+  string email = 2;
+  string password = 3;
+}
+
+message RegisterResponse {
+  string user_id = 1;
+  string message = 2;
+  bool success = 3;
+}
+
+service AuthService {
+  rpc ValidateToken(TokenValidationRequest) returns (TokenValidationResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+}

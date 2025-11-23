@@ -22,13 +22,6 @@ public class PortfolioProcessor {
         this.responseBuilder = responseBuilder;
     }
 
-    /**
-     * Processes a portfolio entity and returns a Single with the gRPC response.
-     * Each portfolio item is processed individually using the ItemProcessor.
-     *
-     * @param portfolio the portfolio entity to process
-     * @return Single containing the processed portfolio response
-     */
     public Single<PortfolioResponse> process(final PortfolioEntity portfolio) {
         return Observable.fromIterable(portfolio.getItems())
                 .concatMapSingle(itemProcessor::process)

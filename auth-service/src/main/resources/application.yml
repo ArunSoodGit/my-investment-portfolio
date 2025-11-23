@@ -1,0 +1,33 @@
+micronaut:
+  application:
+    name: auth-service
+  server:
+    port: 8082
+
+grpc:
+  server:
+    port: 50050
+
+datasources:
+  default:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driverClassName: org.postgresql.Driver
+    maximumPoolSize: 10
+    minimumIdle: 2
+    idleTimeout: 30000
+    connectionTimeout: 30000
+    maxLifetime: 1800000
+
+jpa:
+  default:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}}
+

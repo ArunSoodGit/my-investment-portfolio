@@ -1,6 +1,6 @@
 micronaut:
   application:
-    name: market-itemPrices-service
+    name: portfolio-service
   server:
     port: 8083
 

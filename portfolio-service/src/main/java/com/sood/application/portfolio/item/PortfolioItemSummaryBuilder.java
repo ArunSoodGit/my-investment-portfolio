@@ -13,14 +13,6 @@ import java.math.RoundingMode;
 @Singleton
 public class PortfolioItemSummaryBuilder {
 
-    /**
-     * Calculates financial metrics for a portfolio item.
-     * Determines current value, invested value, profit, and percentage change.
-     *
-     * @param entity the portfolio item entity
-     * @param currentPrice the current stock price
-     * @return summary with calculated metrics for the item
-     */
     public PortfolioItemSummary build(final PortfolioItemEntity entity, final BigDecimal currentPrice) {
         if (entity == null || currentPrice == null) {
             return emptySummary();
