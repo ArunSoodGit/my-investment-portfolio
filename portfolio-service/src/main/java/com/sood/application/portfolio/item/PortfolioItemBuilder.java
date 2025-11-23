@@ -22,14 +22,6 @@ public class PortfolioItemBuilder {
         this.summaryBuilder = summaryBuilder;
     }
 
-    /**
-     * Builds a gRPC PortfolioItem from a portfolio item entity and market data.
-     * Calculates metrics like profit and includes current market information.
-     *
-     * @param entity     the portfolio item entity
-     * @param marketData the current market data for the stock
-     * @return the constructed portfolio item response
-     */
     public PortfolioItem build(final PortfolioItemEntity entity, final MarketDataResponse marketData) {
         final BigDecimal currentPrice = parsePrice(marketData.getPrice());
         final PortfolioItemSummary itemSummary = summaryBuilder.build(entity, currentPrice);

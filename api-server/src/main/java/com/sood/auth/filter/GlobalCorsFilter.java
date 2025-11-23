@@ -1,4 +1,4 @@
-package com.sood;
+package com.sood.auth.filter;
 
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
@@ -40,5 +40,10 @@ public class GlobalCorsFilter implements HttpServerFilter {
                         .header("Access-Control-Allow-Origin", ORIGIN)
                         .header("Access-Control-Allow-Credentials", "true")
                 );
+    }
+
+    @Override
+    public int getOrder() {
+        return 1;
     }
 }

@@ -5,6 +5,9 @@ micronaut:
 
 grpc:
   channels:
+    auth:
+      address: "localhost:50050"
+      plaintext: true
     marketdata:
       address: "localhost:50052"
       plaintext: true

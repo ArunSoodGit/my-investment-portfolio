@@ -7,17 +7,15 @@ import io.reactivex.rxjava3.subjects.PublishSubject;
 import jakarta.inject.Singleton;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Publishes portfolio update events to subscribers.
  * Implements a subject-based event stream for portfolio changes.
  */
 @Singleton
+@Log4j2
 public class PortfolioEventPublisher {
-
-    private static final Logger log = LogManager.getLogger(PortfolioEventPublisher.class);
 
     private final PublishSubject<PortfolioEntity> subject;
 

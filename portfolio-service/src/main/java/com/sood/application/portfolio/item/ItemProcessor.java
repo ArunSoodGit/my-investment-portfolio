@@ -21,14 +21,8 @@ public class ItemProcessor {
         this.itemBuilder = itemBuilder;
     }
 
-    /**
-     * Processes a portfolio item entity by fetching market data and building the response.
-     *
-     * @param itemEntity the portfolio item entity to process
-     * @return Single containing the processed portfolio item with current market data
-     */
-    public Single<PortfolioItem> process(final PortfolioItemEntity itemEntity) {
-        return client.getMarketData(itemEntity.getSymbol())
-                .map(marketData -> itemBuilder.build(itemEntity, marketData));
+    public Single<PortfolioItem> process(final PortfolioItemEntity portfolioItem) {
+        return client.getMarketData(portfolioItem.getSymbol())
+                .map(marketData -> itemBuilder.build(portfolioItem, marketData));
     }
 }

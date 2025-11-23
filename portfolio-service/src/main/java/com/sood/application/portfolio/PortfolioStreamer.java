@@ -7,10 +7,6 @@ import io.reactivex.rxjava3.core.Observable;
 import jakarta.inject.Singleton;
 import lombok.extern.log4j.Log4j2;
 
-/**
- * Provides reactive streams of portfolio data.
- * Combines initial portfolio snapshot with continuous event-driven updates.
- */
 @Singleton
 @Log4j2
 public class PortfolioStreamer {
@@ -26,13 +22,6 @@ public class PortfolioStreamer {
         this.eventPublisher = eventPublisher;
     }
 
-    /**
-     * Returns a reactive stream of portfolio updates.
-     * Starts with the current portfolio snapshot and emits updates as portfolio events occur.
-     *
-     * @param portfolioId the portfolio identifier
-     * @return Observable stream of portfolio responses
-     */
     public Observable<PortfolioResponse> getPortfolioStream(final Long portfolioId) {
         final PortfolioEntity portfolio = provider.provide(portfolioId);
 

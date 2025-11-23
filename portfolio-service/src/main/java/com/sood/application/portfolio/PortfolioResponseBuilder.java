@@ -19,14 +19,6 @@ public class PortfolioResponseBuilder {
         this.summaryBuilder = summaryBuilder;
     }
 
-    /**
-     * Builds a gRPC PortfolioResponse from a portfolio entity and its items.
-     * Includes calculated summary metrics like total value and profit.
-     *
-     * @param portfolio the portfolio entity
-     * @param items     the portfolio items with current market data
-     * @return the constructed portfolio response
-     */
     public PortfolioResponse build(final PortfolioEntity portfolio, final List<PortfolioItem> items) {
         final PortfolioSummary summary = summaryBuilder.build(items);
         return PortfolioResponse.newBuilder()
