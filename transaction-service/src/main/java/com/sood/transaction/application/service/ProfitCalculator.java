@@ -1,4 +1,4 @@
-package com.sood.transaction.domain.service;
+package com.sood.transaction.application.service;
 
 import com.example.market.grpc.MarketDataResponse;
 import com.sood.transaction.domain.model.Transaction;
@@ -9,9 +9,6 @@ import java.math.RoundingMode;
 @Singleton
 public class ProfitCalculator {
 
-    /**
-     * Oblicza procentowy zysk/stratę dla transakcji na podstawie aktualnej ceny akcji.
-     */
     public String calculateProfitPercentage(final Transaction transaction, final MarketDataResponse marketData) {
         final BigDecimal currentPrice = new BigDecimal(marketData.getPrice());
         final BigDecimal purchasePrice = BigDecimal.valueOf(transaction.getPrice());
