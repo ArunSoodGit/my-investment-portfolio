@@ -3,7 +3,7 @@ package com.sood.transaction.application;
 import com.example.market.grpc.MarketDataResponse;
 import com.example.market.grpc.TransactionGetResponse;
 import com.sood.transaction.domain.model.Transaction;
-import com.sood.transaction.domain.service.ProfitCalculator;
+import com.sood.transaction.application.service.ProfitCalculator;
 import jakarta.inject.Singleton;
 import java.util.List;
 import sood.found.TransactionType;
