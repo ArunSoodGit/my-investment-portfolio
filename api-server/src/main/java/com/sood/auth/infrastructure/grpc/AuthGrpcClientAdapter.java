@@ -73,11 +73,11 @@ public class AuthGrpcClientAdapter implements AuthServicePort {
                     .build();
 
             final TokenValidationResponse response = stub.validateToken(request);
-            return new TokenValidationResult(response.getValid(), response.getUserId(), response.getError());
+            return new TokenValidationResult(response.getValid(), response.getError());
 
         } catch (Exception e) {
             log.error("Token validation error: {}", e.getMessage());
-            return new TokenValidationResult(false, "", "Auth service unavailable");
+            return new TokenValidationResult(false, "Auth service unavailable");
         }
     }
 }

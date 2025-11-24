@@ -1,4 +1,4 @@
-package com.sood.auth.jwt;
+package com.sood.auth.infrastructure.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

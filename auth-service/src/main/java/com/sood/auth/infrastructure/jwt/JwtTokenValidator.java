@@ -1,11 +1,10 @@
-package com.sood.auth.jwt;
+package com.sood.auth.infrastructure.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.inject.Singleton;
-import lombok.extern.log4j.Log4j2;
-
 import javax.crypto.SecretKey;
+import lombok.extern.log4j.Log4j2;
 
 @Singleton
 @Log4j2
@@ -23,14 +22,14 @@ public class JwtTokenValidator {
                     .verifyWith(signingKey)
                     .build()
                     .parseSignedClaims(token);
-            return true;
+            return isTokenExpired(token);
         } catch (Exception e) {
             log.error("JWT token validation failed: {}", e.getMessage());
             return false;
         }
     }
 
-    public boolean isTokenExpired(final String token) {
+    private boolean isTokenExpired(final String token) {
         try {
             final var claims = Jwts.parser()
                     .verifyWith(signingKey)
