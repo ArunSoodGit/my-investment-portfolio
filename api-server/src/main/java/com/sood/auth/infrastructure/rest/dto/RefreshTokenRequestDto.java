@@ -1,4 +1,4 @@
-package com.sood.auth.dto;
+package com.sood.auth.infrastructure.rest.dto;
 
 import io.micronaut.serde.annotation.Serdeable;
 import lombok.AllArgsConstructor;
@@ -11,8 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Serdeable
-public class RegisterResponseDto {
-    private String userId;
-    private String message;
-    private boolean success;
+public class RefreshTokenRequestDto {
+    private String token;
 }

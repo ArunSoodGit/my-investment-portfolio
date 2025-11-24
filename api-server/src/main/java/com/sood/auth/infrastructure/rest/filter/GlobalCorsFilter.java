@@ -1,4 +1,4 @@
-package com.sood.auth.filter;
+package com.sood.auth.infrastructure.rest.filter;
 
 import io.micronaut.http.HttpMethod;
 import io.micronaut.http.HttpRequest;
