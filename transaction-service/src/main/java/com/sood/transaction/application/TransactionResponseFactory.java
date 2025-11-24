@@ -1,9 +1,9 @@
 package com.sood.transaction.application;
 
 import com.example.market.grpc.MarketDataResponse;
-import com.example.market.grpc.Transaction;
 import com.example.market.grpc.TransactionGetResponse;
-import com.sood.transaction.infrastructure.entity.TransactionEntity;
+import com.sood.transaction.domain.model.Transaction;
+import com.sood.transaction.domain.service.ProfitCalculator;
 import jakarta.inject.Singleton;
 import java.util.List;
 import sood.found.TransactionType;
@@ -17,27 +17,30 @@ public class TransactionResponseFactory {
         this.profitCalculator = profitCalculator;
     }
 
-    public TransactionGetResponse create(final MarketDataResponse marketData, final List<TransactionEntity> entities) {
-        final List<Transaction> transactions = entities.stream()
-                .filter(entity -> entity.getType() == TransactionType.BUY)
-                .map(entity -> buildTransaction(marketData, entity))
+    public TransactionGetResponse create(final MarketDataResponse marketData,
+            final List<Transaction> transactions) {
+        final List<com.example.market.grpc.Transaction> mappedTransactions = transactions.stream()
+                .filter(transaction -> transaction.getType() == TransactionType.BUY)
+                .map(transaction -> buildTransaction(marketData, transaction))
                 .toList();
 
         return TransactionGetResponse.newBuilder()
                 .setStatus("OK")
-                .addAllTransactions(transactions)
+                .addAllTransactions(mappedTransactions)
                 .build();
     }
 
-    private Transaction buildTransaction(final MarketDataResponse marketData, final TransactionEntity entity) {
-        final String profitPercentage = profitCalculator.calculateProfitPercentage(entity, marketData);
-        return Transaction.newBuilder()
-                .setId(entity.getId())
-                .setSymbol(entity.getSymbol())
-                .setQuantity(entity.getQuantity())
-                .setPrice(entity.getPrice())
+    private com.example.market.grpc.Transaction buildTransaction(final MarketDataResponse marketData,
+            final Transaction transaction) {
+        final String profitPercentage = profitCalculator.calculateProfitPercentage(transaction, marketData);
+
+        return com.example.market.grpc.Transaction.newBuilder()
+                .setId(transaction.getId())
+                .setSymbol(transaction.getSymbol())
+                .setQuantity(transaction.getQuantity())
+                .setPrice(transaction.getPrice())
                 .setCurrentPrice(Double.parseDouble(marketData.getPrice()))
-                .setDate(entity.getDate().toString())
+                .setDate(transaction.getDate().toString())
                 .setProfitPercentage(profitPercentage)
                 .build();
     }

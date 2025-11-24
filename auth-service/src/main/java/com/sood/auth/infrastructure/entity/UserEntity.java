@@ -1,18 +1,17 @@
 package com.sood.auth.infrastructure.entity;
 
-
+import com.sood.auth.domain.model.User;
 import io.micronaut.data.annotation.DateCreated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -47,6 +46,23 @@ public class UserEntity {
 
     @Column
     private LocalDateTime lastLoginAt;
+
+    public static UserEntity fromDomain(User user) {
+        return UserEntity.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .role(user.getRole())
+                .enabled(user.isEnabled())
+                .createdAt(user.getCreatedAt())
+                .lastLoginAt(user.getLastLoginAt())
+                .build();
+    }
+
+    public User toDomain() {
+        return new User(id, username, email, password, role, enabled, createdAt, lastLoginAt);
+    }
 
     public Long getId() {
         return id;

@@ -1,6 +1,7 @@
 package com.sood.transaction.application;
 
 import com.example.market.grpc.TransactionAddRequest;
+import com.sood.transaction.domain.model.Transaction;
 import com.sood.transaction.infrastructure.entity.TransactionEntity;
 import jakarta.inject.Singleton;
 import java.math.BigDecimal;
@@ -11,25 +12,50 @@ import sood.found.TransactionType;
 @Singleton
 public class TransactionMapper {
 
-    public TransactionEntity mapToEntity(final TransactionAddRequest request) {
-        final TransactionEntity entity = new TransactionEntity();
-        entity.setPortfolioId(request.getPortfolioId());
-        entity.setSymbol(request.getSymbol());
-        entity.setQuantity(request.getQuantity());
-        entity.setPrice(request.getPrice());
-        entity.setType(TransactionType.BUY);
-        entity.setDate(LocalDate.parse(request.getDate()));
-        return entity;
+    public TransactionCreatedEvent mapToEvent(final Transaction transaction) {
+        return new TransactionCreatedEvent(
+                transaction.getPortfolioId(),
+                transaction.getSymbol(),
+                transaction.getQuantity(),
+                BigDecimal.valueOf(transaction.getPrice()),
+                transaction.getType(),
+                transaction.getDate()
+        );
     }
 
-    public TransactionCreatedEvent mapToEvent(final TransactionEntity entity) {
-        return new TransactionCreatedEvent(
+    public Transaction toDomain(final TransactionEntity entity) {
+        return new Transaction(
+                entity.getId(),
                 entity.getPortfolioId(),
                 entity.getSymbol(),
                 entity.getQuantity(),
-                BigDecimal.valueOf(entity.getPrice()),
-                entity.getType(),
-                entity.getDate()
+                entity.getPrice(),
+                entity.getDate(),
+                entity.getType()
         );
+    }
+
+    public Transaction fromAddRequest(final TransactionAddRequest request, final TransactionType transactionType) {
+        return new Transaction(
+                null,
+                request.getPortfolioId(),
+                request.getSymbol(),
+                request.getQuantity(),
+                request.getPrice(),
+                LocalDate.parse(request.getDate()),
+                transactionType
+        );
+    }
+
+    public TransactionEntity toEntity(final Transaction transaction) {
+        final TransactionEntity entity = new TransactionEntity();
+        entity.setId(transaction.getId());
+        entity.setPortfolioId(transaction.getPortfolioId());
+        entity.setSymbol(transaction.getSymbol());
+        entity.setQuantity(transaction.getQuantity());
+        entity.setPrice(transaction.getPrice());
+        entity.setDate(transaction.getDate());
+        entity.setType(transaction.getType());
+        return entity;
     }
 }

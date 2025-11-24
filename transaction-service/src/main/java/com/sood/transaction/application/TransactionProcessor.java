@@ -2,7 +2,7 @@ package com.sood.transaction.application;
 
 import com.example.market.grpc.TransactionResponse;
 import com.sood.transaction.application.component.TransactionOperationComponent;
-import com.sood.transaction.infrastructure.entity.TransactionEntity;
+import com.sood.transaction.domain.model.Transaction;
 import jakarta.inject.Singleton;
 import java.util.List;
 import sood.found.TransactionType;
@@ -16,10 +16,10 @@ public class TransactionProcessor {
         this.operations = operations;
     }
 
-    public TransactionResponse process(final TransactionEntity entity, final TransactionType transactionType) {
+    public TransactionResponse process(final Transaction transaction, final TransactionType transactionType) {
         operations.stream()
                 .filter(operation -> operation.supports(transactionType))
-                .forEach(operation -> operation.execute(entity));
+                .forEach(operation -> operation.execute(transaction));
 
         return TransactionResponse.newBuilder()
                 .setStatus("OK")

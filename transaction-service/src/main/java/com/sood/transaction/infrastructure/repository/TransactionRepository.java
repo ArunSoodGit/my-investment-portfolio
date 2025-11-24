@@ -8,5 +8,5 @@ import java.util.List;
 @Repository
 public interface TransactionRepository extends JpaRepository<TransactionEntity, Long> {
 
-    List<TransactionEntity> findByPortfolioIdAndSymbol(long portfolioId, String symbol);
+    List<TransactionEntity> findAllByPortfolioIdAndSymbol(long portfolioId, String symbol);
 }

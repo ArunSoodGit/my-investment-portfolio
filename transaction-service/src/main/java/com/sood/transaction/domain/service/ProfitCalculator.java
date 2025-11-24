@@ -1,7 +1,7 @@
-package com.sood.transaction.application;
+package com.sood.transaction.domain.service;
 
 import com.example.market.grpc.MarketDataResponse;
-import com.sood.transaction.infrastructure.entity.TransactionEntity;
+import com.sood.transaction.domain.model.Transaction;
 import jakarta.inject.Singleton;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -12,9 +12,9 @@ public class ProfitCalculator {
     /**
      * Oblicza procentowy zysk/stratę dla transakcji na podstawie aktualnej ceny akcji.
      */
-    public String calculateProfitPercentage(final TransactionEntity entity, final MarketDataResponse marketData) {
+    public String calculateProfitPercentage(final Transaction transaction, final MarketDataResponse marketData) {
         final BigDecimal currentPrice = new BigDecimal(marketData.getPrice());
-        final BigDecimal purchasePrice = BigDecimal.valueOf(entity.getPrice());
+        final BigDecimal purchasePrice = BigDecimal.valueOf(transaction.getPrice());
 
         if (purchasePrice.compareTo(BigDecimal.ZERO) == 0) {
             return "0%";

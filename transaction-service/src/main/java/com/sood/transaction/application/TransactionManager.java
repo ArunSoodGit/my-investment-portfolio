@@ -5,9 +5,9 @@ import com.example.market.grpc.TransactionGetRequest;
 import com.example.market.grpc.TransactionGetResponse;
 import com.example.market.grpc.TransactionRemoveRequest;
 import com.example.market.grpc.TransactionResponse;
-import com.sood.transaction.client.MarketDataClient;
-import com.sood.transaction.infrastructure.entity.TransactionEntity;
-import com.sood.transaction.infrastructure.service.TransactionService;
+import com.sood.transaction.domain.model.Transaction;
+import com.sood.transaction.domain.port.MarketDataPort;
+import com.sood.transaction.domain.port.TransactionPersistencePort;
 import io.reactivex.rxjava3.core.Single;
 import jakarta.inject.Singleton;
 import java.util.List;
@@ -18,40 +18,39 @@ public class TransactionManager {
 
     private final TransactionProcessor processor;
     private final TransactionResponseFactory builder;
-    private final MarketDataClient client;
+    private final MarketDataPort marketDataPort;
     private final TransactionMapper mapper;
-    private final TransactionService service;
+    private final TransactionPersistencePort persistencePort;
 
-    public TransactionManager(final TransactionProcessor processor, final TransactionResponseFactory builder,
-            final MarketDataClient client, final TransactionMapper mapper, final TransactionService service) {
+    public TransactionManager(final TransactionProcessor processor, final TransactionResponseFactory responseFactory,
+            final MarketDataPort marketDataPort, final TransactionMapper mapper,
+            final TransactionPersistencePort persistencePort) {
         this.processor = processor;
-        this.builder = builder;
-        this.client = client;
+        this.builder = responseFactory;
+        this.marketDataPort = marketDataPort;
         this.mapper = mapper;
-        this.service = service;
+        this.persistencePort = persistencePort;
     }
 
     public Single<TransactionResponse> addTransaction(final TransactionAddRequest request) {
         return Single.fromCallable(() -> {
-            final TransactionEntity entity = mapper.mapToEntity(request);
-            return processor.process(entity, TransactionType.BUY);
+            final Transaction transaction = mapper.fromAddRequest(request, TransactionType.BUY);
+            return processor.process(transaction, TransactionType.BUY);
         });
     }
 
     public Single<TransactionResponse> removeTransaction(final TransactionRemoveRequest request) {
         return Single.fromCallable(() -> {
-            final Long transactionId = request.getTransactionId();
-            final TransactionEntity entity = service.findByTransactionId(transactionId);
-            return processor.process(entity, TransactionType.SELL);
+            final Transaction transaction = persistencePort.findById(request.getTransactionId());
+            return processor.process(transaction, TransactionType.SELL);
         });
     }
 
     public Single<TransactionGetResponse> getTransactions(final TransactionGetRequest request) {
-        final String symbol = request.getSymbol();
-        final List<TransactionEntity> entities = service.findByPortfolioIdAndSymbol(
-                request.getPortfolioId(), symbol);
+        final List<Transaction> transactions = persistencePort.findAllByPortfolioIdAndSymbol(
+                request.getPortfolioId(), request.getSymbol());
 
-        return client.getMarketData(symbol)
-                .map(stockData -> builder.create(stockData, entities));
+        return marketDataPort.getMarketData(request.getSymbol())
+                .map(stockData -> builder.create(stockData, transactions));
     }
 }

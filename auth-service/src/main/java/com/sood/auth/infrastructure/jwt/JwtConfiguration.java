@@ -1,4 +1,4 @@
-package com.sood.auth.jwt;
+package com.sood.auth.infrastructure.jwt;
 
 import io.micronaut.context.annotation.Value;
 import jakarta.inject.Singleton;

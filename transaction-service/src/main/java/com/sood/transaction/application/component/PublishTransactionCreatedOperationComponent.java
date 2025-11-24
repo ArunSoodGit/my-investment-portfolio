@@ -1,7 +1,7 @@
 package com.sood.transaction.application.component;
 
 import com.sood.transaction.application.TransactionMapper;
-import com.sood.transaction.infrastructure.entity.TransactionEntity;
+import com.sood.transaction.domain.model.Transaction;
 import com.sood.transaction.infrastructure.event.TransactionEventPublisher;
 import io.micronaut.core.annotation.Order;
 import jakarta.inject.Singleton;
@@ -27,8 +27,8 @@ public class PublishTransactionCreatedOperationComponent implements TransactionO
     }
 
     @Override
-    public void execute(final TransactionEntity entity) {
-        final TransactionCreatedEvent event = mapper.mapToEvent(entity);
+    public void execute(final Transaction transaction) {
+        final TransactionCreatedEvent event = mapper.mapToEvent(transaction);
         eventPublisher.publish(event);
     }
 }

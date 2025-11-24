@@ -59,8 +59,6 @@ public class JwtAuthenticationFilter implements HttpServerFilter, Ordered {
                     .body("Token validation failed: " + validation.error()));
         }
 
-        log.debug("Token validated for user: {} on path: {} {}", validation.userId(), method, path);
-
         return chain.proceed(request);
     }
 
