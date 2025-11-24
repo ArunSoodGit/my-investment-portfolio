@@ -1,4 +1,4 @@
-package com.sood.auth.filter;
+package com.sood.auth.infrastructure.rest.filter;
 
 import jakarta.inject.Singleton;
 import lombok.extern.log4j.Log4j2;

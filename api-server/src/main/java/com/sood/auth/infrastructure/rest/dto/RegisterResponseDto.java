@@ -1,4 +1,4 @@
-package com.sood.auth.dto;
+package com.sood.auth.infrastructure.rest.dto;
 
 import io.micronaut.serde.annotation.Serdeable;
 import lombok.AllArgsConstructor;

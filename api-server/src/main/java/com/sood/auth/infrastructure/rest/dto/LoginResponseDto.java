@@ -1,4 +1,4 @@
-package com.sood.auth.dto;
+package com.sood.auth.infrastructure.rest.dto;
 
 import io.micronaut.serde.annotation.Serdeable;
 import lombok.AllArgsConstructor;
@@ -13,8 +13,6 @@ import lombok.NoArgsConstructor;
 @Serdeable
 public class LoginResponseDto {
     private String token;
-    private String type = "Bearer";
-    private Long expiresIn = 3600L;
     private String message;
     private boolean success;
 }
