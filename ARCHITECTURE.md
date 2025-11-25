@@ -318,12 +318,3 @@ export REDIS_URI="redis://prod-redis:6379"
 docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ```
 
-## Przyszłe ulepszenia
-
-- [ ] OAuth 2.0 / OIDC integration
-- [ ] Distributed tracing (Jaeger/Zipkin)
-- [ ] Service mesh (Istio)
-- [ ] API rate limiting
-- [ ] Advanced JWT refresh strategy
-- [ ] Multi-factor authentication
-- [ ] Role-based access control (RBAC) enhancements
