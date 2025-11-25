@@ -12,17 +12,19 @@ Aplikacja obsługuje transakcje finansowe, synchronizację danych z zewnętrznyc
 
 ## 🏗️ Architektura systemu
 
-Projekt został zaprojektowany w duchu **Clean Architecture** i **Domain-Driven Design (DDD)**.  
+Projekt został zaprojektowany w duchu **Clean Architecture**.  
 Komunikacja między mikroserwisami odbywa się poprzez **Apache Kafka** (asynchronicznie) oraz REST API (synchronizacja danych).
 
 ### 🔹 Główne komponenty
 
-| Mikroserwis | Opis | Port domyślny |
-|--------------|------|---------------|
-| **api-server** | Brama API, obsługuje routing i komunikację z frontendem | `8080` |
-| **portfolio-service** | Logika biznesowa zarządzania portfelem, kalkulacje wartości aktywów | `8081` |
-| **transaction-service** | Obsługa transakcji kupna/sprzedaży, integracja z zewnętrznymi API cenowymi | `8082` |
-| **market-data-service** | Usługa pobierania i cache’owania aktualnych cen aktywów | `8083` |
+| Mikroserwis                 | Opis                                                                       | Port domyślny |
+|-----------------------------|----------------------------------------------------------------------------|---------------|
+| **api-server**              | Brama API, obsługuje routing i komunikację z frontendem                    | `8080`        |
+| **portfolio-service**       | Logika biznesowa zarządzania portfelem, kalkulacje wartości aktywów        | `8081`        |
+| **transaction-service**     | Obsługa transakcji kupna/sprzedaży, integracja z zewnętrznymi API cenowymi | `8082`        |
+| **market-data-service**     | Usługa pobierania i cache’owania aktualnych cen aktywów                    | `8083`        |
+| **auth-service**            | Autoryzacja                                                                | `8084`        |
+| **historical-data-service** | Przechowywanie danych historycznych portfela                               | `8085`        |
 
 api-model zawiera klasy modelowe wspóldzielone przez różne mikroserwisy ( w tym .proto)
 
@@ -31,6 +33,7 @@ api-model zawiera klasy modelowe wspóldzielone przez różne mikroserwisy ( w t
 - **Apache Kafka** – komunikacja asynchroniczna między mikroserwisami (event-driven architecture)  
 - **Redis** – cache danych (np. ceny aktywów, wyniki kalkulacji)  
 - **PostgreSQL** – baza danych dla poszczególnych mikroserwisów  
+- **MongoDB** – baza danych NoSQL dla historical-data-service  
 - **Docker Compose** – uruchamianie całego środowiska lokalnie  
 - **Micronaut Framework** – lekki framework do tworzenia mikroserwisów w Javie (szybki start, DI, AOT)
 
@@ -38,15 +41,16 @@ api-model zawiera klasy modelowe wspóldzielone przez różne mikroserwisy ( w t
 
 ## ⚙️ Użyte technologie
 
-| Technologia | Zastosowanie |
-|--------------|--------------|
-| **Java 21 (Amazon Corretto)** | Główny język backendu |
-| **Micronaut 4.x** | Framework mikroserwisowy |
+| Technologia | Zastosowanie                               |
+|--------------|--------------------------------------------|
+| **Java 21 (Amazon Corretto)** | Główny język backendu                      |
+| **Micronaut 4.x** | Framework mikroserwisowy                   |
 | **Apache Kafka** | Asynchroniczna komunikacja między usługami |
-| **Redis** | Cache i pub/sub |
-| **PostgreSQL** | Relacyjna baza danych |
-| **Docker & Docker Compose** | Uruchamianie środowiska lokalnego |
-| **Maven** | Budowanie i zarządzanie zależnościami |
+| **Redis** | Cache i pub/sub                            |
+| **PostgreSQL** | Relacyjna baza danych                      |
+| **MongoDB** | Nierelacyjna baza danych                   |
+| **Docker & Docker Compose** | Uruchamianie środowiska lokalnego          |
+| **Maven** | Budowanie i zarządzanie zależnościami      |
 
 ---
 
