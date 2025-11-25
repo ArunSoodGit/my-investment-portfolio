@@ -13,7 +13,7 @@ public class MarketDataClientAdapter implements MarketDataPort {
 
     private final MarketDataServiceGrpc.MarketDataServiceFutureStub stub;
 
-    public MarketDataClientAdapter(@GrpcChannel("marketdata") final io.grpc.Channel channel) {
+    public MarketDataClientAdapter(@GrpcChannel("market-data") final io.grpc.Channel channel) {
         this.stub = MarketDataServiceGrpc.newFutureStub(channel);
     }
 

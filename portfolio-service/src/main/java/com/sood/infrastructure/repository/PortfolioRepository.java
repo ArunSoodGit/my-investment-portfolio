@@ -14,7 +14,6 @@ public interface PortfolioRepository extends JpaRepository<PortfolioEntity, Long
     @Query("""
                 SELECT DISTINCT p FROM PortfolioEntity p
                 LEFT JOIN FETCH p.items i
-                LEFT JOIN FETCH p.history h
                 WHERE p.id = :portfolioId
             """)
     Optional<PortfolioEntity> findByIdWithItemsAndHistory(
@@ -24,7 +23,6 @@ public interface PortfolioRepository extends JpaRepository<PortfolioEntity, Long
     @Query("""
                 SELECT DISTINCT p FROM PortfolioEntity p
                 LEFT JOIN FETCH p.items i
-                LEFT JOIN FETCH p.history h
             """)
     List<PortfolioEntity> findAllWithItemsAndHistory();
 }

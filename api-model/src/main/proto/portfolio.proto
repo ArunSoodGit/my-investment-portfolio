@@ -9,25 +9,22 @@ package market;
 // ====== REQUESTS ======
 
 message PortfolioRequest {
-  int64 portfolioId = 1; // Identyfikator portfela
+  int64 portfolioId = 1;
 }
 
-// ====== MODELE ======
 
-
-// Pojedynczy składnik portfela
 message PortfolioItem {
-  string symbol = 1;          // np. "AAPL"
-  string name = 2;            // np. "Apple Inc."
-  string exchange = 3;        // np. "NASDAQ"
-  double quantity = 4;        // liczba jednostek / akcji aktualnie w portfelu
-  string averagePurchasePrice = 5;   // cena ostatniego zakupu
-  string percentageChange = 6;   // zmiana ceny w procentach
-  string currentPrice = 7;    // aktualna cena rynkowa
-  string currency = 8;        // np. "USD"
-  string totalValue = 9;      // obliczona wartość (quantity * currentPrice)
-  string profit = 10;          // zysk/strata (totalValue - purchasePrice * quantity)
-  string profitPercentage = 11;          // zysk/strata %
+  string symbol = 1;
+  string name = 2;
+  string exchange = 3;
+  double quantity = 4;
+  string averagePurchasePrice = 5;
+  string percentageChange = 6;
+  string currentPrice = 7;
+  string currency = 8;
+  string totalValue = 9;
+  string profit = 10;
+  string profitPercentage = 11;
 }
 
 // ====== RESPONSES ======
@@ -36,11 +33,11 @@ message PortfolioResponse {
   int64 portfolioId = 1;
   string userId = 2;
   string portfolioName = 3;
-  string investedValue = 4;           // suma kosztów zakupu
-  string currentValue = 5;            // suma aktualnych wartości
-  string profitValue = 6;             // zysk/strata całkowity
-  string profitPercentage = 7;             // zysk/strata całkowity
-  repeated PortfolioItem items = 8;        // lista składników portfela
+  string investedValue = 4;
+  string currentValue = 5;
+  string profitValue = 6;
+  string profitPercentage = 7;
+  repeated PortfolioItem items = 8;
 }
 
 // ====== SERVICE ======

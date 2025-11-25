@@ -1,0 +1,39 @@
+syntax = "proto3";
+import "portfolio.proto";
+import "google/protobuf/empty.proto";
+
+option java_multiple_files = true;
+option java_package = "com.example.market.grpc";
+option java_outer_classname = "PortfolioHistoryProto";
+
+package market;
+
+// ====== REQUESTS ======
+message HistoricalDataGetRequest {
+  int64 portfolioId = 1;
+}
+
+message HistoricalDataSaveRequest {
+  int64 portfolioId = 1;
+  HistoricalDataIem historicalDataItem = 2;
+}
+
+
+// ====== RESPONSES ======
+
+message HistoricalDataIem {
+  string date = 1;
+  string currentValue = 2;
+  string investedValue = 3;
+}
+message HistoricalDataGetResponse {
+  int64 portfolioId = 1;
+  repeated HistoricalDataIem items = 2;
+}
+
+// ====== SERVICE ======
+
+service HistoricalDataService {
+  rpc GetHistoricalData(HistoricalDataGetRequest) returns (HistoricalDataGetResponse);
+  rpc SaveHistoricalData(HistoricalDataSaveRequest) returns (google.protobuf.Empty);
+}

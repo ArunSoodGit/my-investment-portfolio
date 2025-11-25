@@ -2,9 +2,7 @@ package com.sood.application.portfolio.dto.mapper;
 
 import com.sood.application.portfolio.dto.PortfolioDto;
 import com.sood.application.portfolio.dto.PortfolioItemDto;
-import com.sood.application.portfolio.history.dto.PortfolioHistoryDto;
 import com.sood.infrastructure.entity.PortfolioEntity;
-import com.sood.infrastructure.entity.PortfolioHistoryEntity;
 import com.sood.infrastructure.entity.PortfolioItemEntity;
 import jakarta.inject.Singleton;
 import java.util.stream.Collectors;
@@ -35,9 +33,6 @@ public class PortfolioMapper {
                 .items(entity.getItems().stream()
                         .map(this::toItemDto)
                         .collect(Collectors.toSet()))
-                .history(entity.getHistory().stream()
-                        .map(this::toHistoryDto)
-                        .collect(Collectors.toSet()))
                 .build();
     }
 
@@ -65,12 +60,6 @@ public class PortfolioMapper {
                     .collect(Collectors.toSet()));
         }
 
-        if (dto.getHistory() != null) {
-            entity.setHistory(dto.getHistory().stream()
-                    .map(historyDto -> toHistoryEntity(historyDto, entity))
-                    .collect(Collectors.toSet()));
-        }
-
         return entity;
     }
 
@@ -93,25 +82,6 @@ public class PortfolioMapper {
         entity.setAveragePurchasePrice(dto.getAveragePurchasePrice());
         entity.setInvestedValue(dto.getInvestedValue());
         entity.setLastUpdated(dto.getLastUpdated());
-        entity.setPortfolio(portfolio);
-        return entity;
-    }
-
-    private PortfolioHistoryDto toHistoryDto(final PortfolioHistoryEntity entity) {
-        return PortfolioHistoryDto.builder()
-                .id(entity.getId())
-                .date(entity.getDate())
-                .investedValue(entity.getInvestedValue())
-                .currentValue(entity.getCurrentValue())
-                .build();
-    }
-
-    private PortfolioHistoryEntity toHistoryEntity(final PortfolioHistoryDto dto, final PortfolioEntity portfolio) {
-        final PortfolioHistoryEntity entity = new PortfolioHistoryEntity();
-        entity.setId(dto.getId());
-        entity.setDate(dto.getDate());
-        entity.setInvestedValue(dto.getInvestedValue());
-        entity.setCurrentValue(dto.getCurrentValue());
         entity.setPortfolio(portfolio);
         return entity;
     }

@@ -17,7 +17,7 @@ public class MarketDataServiceClient {
 
     private final MarketDataServiceGrpc.MarketDataServiceFutureStub stub;
 
-    public MarketDataServiceClient(@GrpcChannel("marketdata") io.grpc.Channel channel) {
+    public MarketDataServiceClient(@GrpcChannel("market-data") io.grpc.Channel channel) {
         this.stub = MarketDataServiceGrpc.newFutureStub(channel);
     }
 

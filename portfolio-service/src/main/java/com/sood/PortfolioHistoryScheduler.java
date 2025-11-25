@@ -1,7 +1,7 @@
 package com.sood;
 
 import com.sood.application.portfolio.PortfolioStreamer;
-import com.sood.application.portfolio.history.PortfolioHistoryManager;
+import com.sood.client.HistoricalDataServiceClient;
 import com.sood.domain.MarketSessionMonitor;
 import com.sood.infrastructure.entity.PortfolioEntity;
 import com.sood.infrastructure.service.PortfolioService;
@@ -24,14 +24,14 @@ public class PortfolioHistoryScheduler {
 
     private final PortfolioService service;
     private final PortfolioStreamer streamer;
-    private final PortfolioHistoryManager historyManager;
+    private final HistoricalDataServiceClient historicalDataClient;
     private final MarketSessionMonitor marketSessionMonitor;
 
     public PortfolioHistoryScheduler(final PortfolioService service, final PortfolioStreamer streamer,
-            final PortfolioHistoryManager historyManager, final MarketSessionMonitor marketSessionMonitor) {
+            final HistoricalDataServiceClient historicalDataClient, final MarketSessionMonitor marketSessionMonitor) {
         this.service = service;
         this.streamer = streamer;
-        this.historyManager = historyManager;
+        this.historicalDataClient = historicalDataClient;
         this.marketSessionMonitor = marketSessionMonitor;
     }
 
@@ -47,7 +47,7 @@ public class PortfolioHistoryScheduler {
                     .flatMapCompletable(portfolio ->
                             streamer.getPortfolioStream(portfolio.getId())
                                     .flatMapCompletable(portfolioResponse ->
-                                            Completable.fromAction(() -> historyManager.save(portfolioResponse)))
+                                            Completable.fromAction(() -> historicalDataClient.save(portfolioResponse)))
                                     .doOnError(error -> log.error(
                                             "Error saving portfolio history for portfolioId {}: {}",
                                             portfolio.getId(), error.getMessage(), error))

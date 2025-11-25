@@ -28,9 +28,6 @@ public class PortfolioEntity {
     @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<PortfolioItemEntity> items = new HashSet<>();
 
-    @OneToMany(mappedBy = "portfolio", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<PortfolioHistoryEntity> history = new HashSet<>();
-
     public Optional<PortfolioItemEntity> findItem(final String symbol) {
         return items.stream()
                 .filter(item -> item.getSymbol().equals(symbol))
@@ -92,13 +89,5 @@ public class PortfolioEntity {
 
     public void setItems(Set<PortfolioItemEntity> items) {
         this.items = items;
-    }
-
-    public Set<PortfolioHistoryEntity> getHistory() {
-        return history;
-    }
-
-    public void setHistory(Set<PortfolioHistoryEntity> history) {
-        this.history = history;
     }
 }

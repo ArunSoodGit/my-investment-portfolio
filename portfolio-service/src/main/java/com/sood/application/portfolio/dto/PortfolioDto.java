@@ -1,14 +1,12 @@
 package com.sood.application.portfolio.dto;
 
-import com.sood.application.portfolio.history.dto.PortfolioHistoryDto;
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Data Transfer Object for Portfolio cache storage.
@@ -28,7 +26,4 @@ public class PortfolioDto {
 
     @Builder.Default
     private Set<PortfolioItemDto> items = new HashSet<>();
-
-    @Builder.Default
-    private Set<PortfolioHistoryDto> history = new HashSet<>();
 }

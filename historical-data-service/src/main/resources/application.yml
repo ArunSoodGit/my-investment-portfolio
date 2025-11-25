@@ -1,0 +1,13 @@
+micronaut:
+  application:
+    name: portfolio-history-service
+  server:
+    host: 0.0.0.0
+    port: 8085
+
+grpc:
+  server:
+    port: 50055
+
+mongodb:
+  uri: "mongodb+srv://${MONGO_USER}:${MONGO_PASS}@portfolio.pzj2muc.mongodb.net/historicalData?retryWrites=true&w=majority"

@@ -36,6 +36,9 @@ grpc:
   server:
     port: 50053
   channels:
-    marketdata:
+    market-data:
       address: "localhost:50052"
+      plaintext: true
+    historical-data:
+      address: "localhost:50055"
       plaintext: true

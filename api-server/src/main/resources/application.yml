@@ -13,7 +13,7 @@ grpc:
     auth:
       address: "localhost:50050"
       plaintext: true
-    marketdata:
+    market-data:
       address: "localhost:50052"
       plaintext: true
     portfolio:
@@ -21,4 +21,7 @@ grpc:
       plaintext: true
     transaction:
       address: "localhost:50054"
+      plaintext: true
+    historical-data:
+      address: "localhost:50055"
       plaintext: true
